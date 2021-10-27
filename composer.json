@@ -1,0 +1,19 @@
+{
+  "name": "sunhill/infomarket",
+  "description": "A exchange for informations",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Klaus Dimde",
+      "email": "klaus@dimde.info"
+    }
+  ],
+  "require": {},
+  "autoload": {
+      "psr-4": {
+          "Sunhill\\InfoMarket\\":"src",
+          "Sunhill\\InfoMarket\\Tests\\":"tests"
+      }
+  }
+}
