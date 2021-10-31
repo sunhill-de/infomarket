@@ -12,7 +12,7 @@
  * PSR-State: complete
  */
 
-namespace Sunhill\InfoMarket\Elements\Response;
+namespace Sunhill\InfoMarket\Marketeers\Response;
 
 use \StdClass;
 use Sunhill\InfoMarket\Elements\ElementException;
