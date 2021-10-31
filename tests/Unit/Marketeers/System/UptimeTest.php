@@ -2,44 +2,12 @@
 
 namespace Sunhill\InfoMarket\Tests\Unit\System;
 
-use PHPUnit\Framework\TestCase;
-use Sunhill\InfoMarket\Elements\System\Uptime;
+use Sunhill\InfoMarket\Test\InfoMarketTestCase;
+use Sunhill\InfoMarket\Marketeers\System\Uptime;
 
-class UptimeTest extends TestCase
+class UptimeTest extends InfoMarketTestCase
 {
     
-    /**
-     * copied and modified from https://stackoverflow.com/questions/18558183/phpunit-mockbuilder-set-mock-object-internal-property
-     * Returns the value of the property "$property_name" of object "$object"
-     * @param unknown $object
-     * @param unknown $property_name
-     */
-    public function getProtectedProperty(&$object,$property_name) {
-        $reflection = new \ReflectionClass($object);
-        $reflection_property = $reflection->getProperty($property_name);
-        $reflection_property->setAccessible(true);
-        
-        return $reflection_property->getValue($object);
-    }
-    
-    /**
-     * copied from https://jtreminio.com/blog/unit-testing-tutorial-part-iii-testing-protected-private-methods-coverage-reports-and-crap/
-     * Calls the protected or private method "$methodName" of the object $object with the given parameters and
-     * returns its result
-     * @param unknown $object
-     * @param unknown $methodName
-     * @param array $parameters
-     * @return unknown
-     */
-    public function invokeMethod(&$object, $methodName, array $parameters = array())
-    {
-        $reflection = new \ReflectionClass(get_class($object));
-        $method = $reflection->getMethod($methodName);
-        $method->setAccessible(true);
-        
-        return $method->invokeArgs($object, $parameters);
-    }
-   
     public function testReadSuccess()
     {
         $test = new Uptime();
@@ -47,5 +15,89 @@ class UptimeTest extends TestCase
         $this->assertFalse(empty($data));
     }
     
-    public function testHasElement($element,$expect)
+    /**
+     * @dataProvider OffersItemProvider
+     * @param unknown $element
+     * @param unknown $expect
+     */
+    public function testOffersItem($element,$expect)
+    {
+        $test = new Uptime();
+        $this->assertEquals($expect,$test->offersItem($element));
+    }
+    
+    public function OffersItemProvider()
+    {
+        return [
+            ['uptime.seconds',true],
+            ['uptime.duration',true],
+            ['idletime.seconds',true],
+            ['idletime.duration',true],
+            ['average_idletime.seconds',true],
+            ['average_idletime.duration',true],
+            ['some.item',false]
+        ];
+    }
+    
+    public function testGetUptimeSeconds()
+    {
+        $test = $this->getMockBuilder(Uptime::class)
+            ->setMethods(['getData'])    
+            ->getMock();
+        $test->method('getData')->willReturn("1131440.44 4488358.31\n");
+        $response = $test->getItem('uptime.seconds');
+        $this->assertEquals(1131440,$response->getElement('value'));
+    }
+    
+    public function testGetUptimeDuration()
+    {
+        $test = $this->getMockBuilder(Uptime::class)
+        ->setMethods(['getData'])
+        ->getMock();
+        $test->method('getData')->willReturn("1131440.44 4488358.31\n");
+        $response = $test->getItem('uptime.duration');
+        $this->assertEquals('13 days and 2 hours',$response->getElement('human_readable_value'));
+    }
+    
+    public function testGetIdletimeSeconds()
+    {
+        $test = $this->getMockBuilder(Uptime::class)
+        ->setMethods(['getData'])
+        ->getMock();
+        $test->method('getData')->willReturn("1131440.44 4488358.31\n");
+        $response = $test->getItem('idletime.seconds');
+        $this->assertEquals(4488358,$response->getElement('value'));
+    }
+    
+    public function testGetIdletimeDuration()
+    {
+        $test = $this->getMockBuilder(Uptime::class)
+        ->setMethods(['getData'])
+        ->getMock();
+        $test->method('getData')->willReturn("1131440.44 4488358.31\n");
+        $response = $test->getItem('idletime.duration');
+        $this->assertEquals('51 days and 22 hours',$response->getElement('human_readable_value'));
+    }
+    
+    public function testGetAverageIdletimeSeconds()
+    {
+        $test = $this->getMockBuilder(Uptime::class)
+        ->setMethods(['getData','getCPUCount'])
+        ->getMock();
+        $test->method('getData')->willReturn("1131440.44 4488358.31\n");
+        $test->method('getCPUCount')->willReturn(4);
+        $response = $test->getItem('average_idletime.seconds');
+        $this->assertEquals((int)(4488358/4),$response->getElement('value'));
+    }
+    
+    public function testGetAverageIdletimeDuration()
+    {
+        $test = $this->getMockBuilder(Uptime::class)
+        ->setMethods(['getData'])
+        ->getMock();
+        $test->method('getData')->willReturn("1131440.44 4488358.31\n");
+        $response = $test->getItem('average_idletime.duration');
+        $this->assertEquals('12 days and 23 hours',$response->getElement('human_readable_value'));
+    }
+    
 }

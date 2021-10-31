@@ -12,11 +12,12 @@
  * PSR-State: complete
  */
 
-namespace Sunhill\InfoMarket\Elements\System;
+namespace Sunhill\InfoMarket\Marketeers\System;
 
-use Sunhill\InfoMarket\Elements\InfoElement;
+use Sunhill\InfoMarket\Marketeers\MarketeerBase;
+use Sunhill\InfoMarket\Marketeers\Response\Response;
 
-class Uptime extends InfoElement
+class Uptime extends MarketeerBase
 {
     protected function getData()
     {
@@ -24,24 +25,92 @@ class Uptime extends InfoElement
         return $data;
     }
     
-    protected function itemExists(string $name): bool
+    protected function getCPUCount()
     {
-        switch ($name) {
-            case 'uptime':
-            case 'idle':
-                return true;
-            default:
-                return false;
+        $data = file_get_contents('/proc/cpuinfo');
+        $lines = explode("\n",$data);
+        $count = 0;
+        foreach ($lines as $line) {
+            if (substr($line,0,9) == 'processor') {
+                $count++;
+            }
         }
+        return $count;    
     }
     
-    protected function itemIsReadable(): bool
+    /**
+     * Returns what items this marketeer offers
+     * @return array
+     */
+    protected function getOffering(): array
+    {
+        return [
+          'uptime.seconds',
+          'uptime.duration',
+          'idletime.seconds',
+          'idletime.duration',
+          'average_idletime.seconds',
+          'average_idletime.duration'
+        ];
+    }
+       
+    protected function itemIsReadable(string $item): bool
     {
         return true;
     }
     
-    protected function itemIsWritable(): bool
+    protected function itemIsWriteable(string $item): bool
     {
         return false;
     }
+    
+    private function stripData() 
+    {
+        $data = str_replace("\n","",$this->getData());
+        return explode(' ',$data);           
+    }
+    
+    protected function getUptimeSeconds()
+    {
+        $response = new Response();
+        $uptime = (int)($this->stripData()[0]);
+        return $response->OK()->type('Integer')->unit('s')->semantic('uptime')->value($uptime);
+    }
+ 
+    protected function getUptimeDuration()
+    {
+        $response = new Response();
+        $uptime = (int)($this->stripData()[0]);
+        return $response->OK()->type('Integer')->unit('d')->semantic('uptime')->value($uptime);
+    }
+    
+    protected function getIdletimeSeconds()
+    {
+        $response = new Response();
+        $uptime = (int)($this->stripData()[1]);
+        return $response->OK()->type('Integer')->unit('s')->semantic('uptime')->value($uptime);
+    }
+    
+    protected function getIdletimeDuration()
+    {
+        $response = new Response();
+        $uptime = (int)($this->stripData()[1]);
+        return $response->OK()->type('Integer')->unit('d')->semantic('uptime')->value($uptime);
+    }
+    
+    protected function getAverageIdletimeSeconds()
+    {
+        $response = new Response();
+        $uptime = (int)($this->stripData()[1]/$this->getCPUCount());
+        return $response->OK()->type('Integer')->unit('s')->semantic('uptime')->value($uptime);
+    }
+    
+    protected function getAverageIdletimeDuration()
+    {
+        $response = new Response();
+        $uptime = (int)($this->stripData()[1]/$this->getCPUCount());
+        return $response->OK()->type('Integer')->unit('d')->semantic('uptime')->value($uptime);
+    }
+    
+    
 }

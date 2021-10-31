@@ -12,9 +12,9 @@
  * PSR-State: complete
  */
 
-namespace Sunhill\InfoMarket\Elements;
+namespace Sunhill\InfoMarket\Marketeers;
 
-class ElementException extends \Exception
+class MarketeerException extends \Exception
 {
     
 }

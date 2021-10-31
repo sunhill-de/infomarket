@@ -64,6 +64,11 @@ class Response
         return property_exists($this->elements,$element);    
     }
     
+    public function getElement(string $element)
+    {
+        return $this->elements->$element;    
+    }
+    
     /**
      * Inidcates that the request was successful
      * @return Response
@@ -218,6 +223,7 @@ class Response
     {
         switch ($unit) {
             case 'air_temp':
+            case 'uptime':
                 $this->setElement('semantic_int',$unit);
                 $this->setSemantic($unit);
                 break;
@@ -236,6 +242,10 @@ class Response
         switch ($unit) {
             case 'air_temp':
                 $this->setElement('semantic',$this->translate('Air temperature'));
+                break;
+            case 'uptime':
+                $this->setElement('semantic',$this->translate('Uptime'));
+                break;
         }
     }
 

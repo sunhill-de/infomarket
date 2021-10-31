@@ -244,4 +244,5 @@ class ResponseTest extends InfoMarketTestCase
             ['C','1.1 TB',1000*1100*1000*1000],
         ];        
     }
+    
 }
