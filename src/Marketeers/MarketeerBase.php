@@ -99,8 +99,8 @@ abstract class MarketeerBase
             $subparts = explode('_',$parts[$i]);
             $allparts = array_merge($allparts,$subparts);
         }
-        for ($i=0;$i<count($subparts);$i++) {
-            $subparts[$i] = ucfirst(strtolower($subparts[$i]));            
+        for ($i=0;$i<count($allparts);$i++) {
+            $allparts[$i] = ucfirst(strtolower($allparts[$i]));            
         }
         return 'get'.implode('',$allparts);        
     }
