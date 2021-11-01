@@ -42,9 +42,86 @@ abstract class MarketeerBase
      */
     public function offersItem(string $name): bool
     {
-        return in_array($name,$this->getOffer());    
+        if (strpos($name,'*')) {
+            throw new MarketeerException("An item query mustn't contain *: $name");
+        }
+        foreach ($this->getOffer() as $offer) {
+            if ($this->offerMatches($name,$offer)) {
+                return true;
+            }
+        }
+        return false;
     }
 
+    private function offerMatches(string $search,string $offer): bool
+    {
+        if (strpos($offer,'*')) {
+            $search_parts = explode('.',$search);
+            $offer_parts = explode('.',$offer);
+            $i = 0;
+            while ($i < count($search_parts)) {
+                if ($i>=count($offer_parts)) {
+                    return false;
+                }
+                switch ($offer_parts[$i]) {
+                    case '*':
+                        break;
+                    case '*#':
+                        if (!is_numeric($search_parts[$i])) {
+                            return false;
+                        }
+                        break;
+                    default:
+                        if ($search_parts[$i] != $offer_parts[$i]) {
+                            return false;
+                        }
+                }
+                $i++;
+            }
+            return true;
+        } else {
+            return ($offer == $search);
+        }
+    }
+    
+    private function getVariableParameters(string $search,string $offer)
+    {
+        $result = [];
+        if (strpos($offer,'*')) {
+            $search_parts = explode('.',$search);
+            $offer_parts = explode('.',$offer);
+            $i = 0;
+            while ($i < count($search_parts)) {
+                if ($i>=count($offer_parts)) {
+                    return false;
+                }
+                switch ($offer_parts[$i]) {
+                    case '*':
+                        $result[] = $search_parts[$i];
+                        break;
+                    case '*#':
+                        if (!is_numeric($search_parts[$i])) {
+                            return false;
+                        }
+                        $result[] = $search_parts[$i];
+                        break;
+                    default:
+                        if ($search_parts[$i] != $offer_parts[$i]) {
+                            return false;
+                        }
+                }
+                $i++;
+            }
+            return $result;
+        } else {
+            if ($offer == $search) {
+                return [];
+            } else {
+                return false;
+            }
+        }
+    }
+    
     /**
      * Returns if the given item is readable or raises an exception if it doesn't exist
      * @param string $name
@@ -107,16 +184,12 @@ abstract class MarketeerBase
     
     public function getItem(string $name): Response
     {
-        if ($this->offersItem($name)) {
-            $method_name = $this->calculateGetterName($name);
-            if (method_exists($this,$method_name)) {
-                return $this->$method_name();
-            } else {
-                return $this->getItemResponse($name);
+        foreach ($this->getOffer() as $offer=>$callback) {
+            if (($variables = $this->getVariableParameters($name,$offer)) !== false) {
+                return $this->$callback(...$variables);
             }
-        } else {
-            throw new MarketeerException("The item '$name' doesn't exists.");
-        }        
+        }
+        throw new MarketeerException("The item '$name' doesn't exists.");
     }
 
     /**

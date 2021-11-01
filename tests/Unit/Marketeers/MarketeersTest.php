@@ -12,9 +12,10 @@ class FakeMarketeer extends MarketeerBase
     protected function getOffering(): array
     {
         return [
-            'test.item',
-            'test.catchall',
-            'test.array.*.item'
+            'test.item'=>'getTestItem',
+            'test.catchall'=>'getTestCatchall',
+            'test.array.*.item'=>'getTestArray',
+            'another.*.array.*'=>'getAnotherArray'
         ];
     }
     
@@ -41,6 +42,22 @@ class FakeMarketeer extends MarketeerBase
     {
         
     }
+    
+    protected function getTestCatchall(): Response
+    {
+        
+    }
+    
+    protected function getTestArray($index): Response
+    {
+        
+    }
+    
+    protected function getAnotherArray($index1,$index2): Response
+    {
+        
+    }
+    
 }
 
 class MarketeersTest extends InfoMarketTestCase
@@ -67,6 +84,30 @@ class MarketeersTest extends InfoMarketTestCase
         ];
     }
 
+    /**
+     * @dataProvider OfferMatchesProvider
+     * @param unknown $test
+     * @param unknown $offer
+     * @param unknown $expect
+     */
+    public function testOfferMatches($test,$offer,$expect)
+    {
+        $test_obj = new FakeMarketeer();
+        $this->assertEquals($expect,$this->invokeMethod($test_obj, 'offerMatches',[$test,$offer]));
+    }
+    
+    public function OfferMatchesProvider()
+    {
+        return [
+            ['this.is.a.test','this.is.a.test',true],
+            ['this.is.a.test','this.is.another,test',false],
+            ['this.is.a.test','this.is.*.test',true],
+            ['this.is.a.test','this.is.*#.test',false],
+            ['this.is.a.test','this.is.*',false],
+            ['this.is.a.test','this.*.a.*',true],            
+        ];
+    }
+    
     public function testUnknownItem()
     {
         $this->expectException(MarketeerException::class);
@@ -75,7 +116,29 @@ class MarketeersTest extends InfoMarketTestCase
     }
     
     public function testSimpleItem()
+    {        
+        $test = $this->getMockBuilder(FakeMarketeer::class)
+        ->setMethods(['getTestItem'])
+        ->getMock();
+        $test->expects($this->once())->method('getTestItem');
+        $test->getItem('test.item');
+    }
+    
+    public function testWithParameter()
     {
-        
+        $test = $this->getMockBuilder(FakeMarketeer::class)
+        ->setMethods(['getTestArray'])
+        ->getMock();
+        $test->expects($this->once())->method('getTestArray')->with('test');
+        $test->getItem('test.array.test.item');        
+    }
+    
+    public function testWithMoreParameter()
+    {
+        $test = $this->getMockBuilder(FakeMarketeer::class)
+        ->setMethods(['getAnotherArray'])
+        ->getMock();
+        $test->expects($this->once())->method('getAnotherArray')->with('test','item');
+        $test->getItem('another.test.array.item');
     }
 }
