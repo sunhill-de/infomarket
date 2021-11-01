@@ -45,7 +45,7 @@ abstract class MarketeerBase
         if (strpos($name,'*')) {
             throw new MarketeerException("An item query mustn't contain *: $name");
         }
-        foreach ($this->getOffer() as $offer) {
+        foreach ($this->getOffer() as $offer=>$callback) {
             if ($this->offerMatches($name,$offer)) {
                 return true;
             }

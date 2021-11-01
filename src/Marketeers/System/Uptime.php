@@ -45,12 +45,12 @@ class Uptime extends MarketeerBase
     protected function getOffering(): array
     {
         return [
-          'uptime.seconds',
-          'uptime.duration',
-          'idletime.seconds',
-          'idletime.duration',
-          'average_idletime.seconds',
-          'average_idletime.duration'
+          'uptime.seconds'=>'getUptimeSeconds',
+          'uptime.duration'=>'getUptimeDuration',
+          'idletime.seconds'=>'getIdletimeSeconds',
+          'idletime.duration'=>'getIdletimeDuration',
+          'average_idletime.seconds'=>'getAverageIdletimeSeconds',
+          'average_idletime.duration'=>'getAverageIdletimeDuration'
         ];
     }
        
