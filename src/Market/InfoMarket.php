@@ -17,5 +17,22 @@ namespace Sunhill\InfoMarket\Market;
 class InfoMarket
 {
   
+  /**
+   * Stores the installed marketeers
+   */
+  protected $marketeers = [];  
+  
+  public function __construct()
+  {
+    $this->installMarketeers();
+  }
+  
+  protected function installMarketeers()
+  {
+  }
+  
+  protected function installMarketeer(string $class_name,string $mount_point)
+  {
+  }
   
 }
