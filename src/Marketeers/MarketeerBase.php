@@ -10,6 +10,8 @@
  * Coverage: unknown
  * Dependencies: none
  * PSR-State: complete
+ * @todo: Merging results? 
+ * 
  */
 
 namespace Sunhill\InfoMarket\Marketeers;

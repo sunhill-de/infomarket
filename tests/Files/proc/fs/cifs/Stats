@@ -1,0 +1,10 @@
+Resources in use
+CIFS Session: 0
+Share (unique mount targets): 0
+SMB Request/Response Buffer: 0 Pool size: 4
+SMB Small Req/Resp Buffer: 0 Pool size: 30
+Operations (MIDs): 0
+
+0 session 0 share reconnects
+Total vfs operations: 0 maximum at one time: 0
+

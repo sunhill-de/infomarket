@@ -1,0 +1,2 @@
+DRIVER=vesa-framebuffer
+MODALIAS=platform:vesa-framebuffer

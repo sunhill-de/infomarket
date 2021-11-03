@@ -1,0 +1,5 @@
+state = active
+mem 0xfdaf0000-0xfdafffff
+mem 0xfdae0000-0xfdaeffff
+mem 0xfdac0000-0xfdacffff
+irq 14

@@ -1,0 +1,7 @@
+Display Internal CIFS Data Structures for Debugging
+---------------------------------------------------
+CIFS Version 2.23
+Features: DFS,FSCACHE,STATS,DEBUG,ALLOW_INSECURE_LEGACY,WEAK_PW_HASH,CIFS_POSIX,UPCALL(SPNEGO),XATTR,ACL
+CIFSMaxBufSize: 16384
+Active VFS Requests: 0
+Servers:

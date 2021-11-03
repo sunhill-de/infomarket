@@ -1,0 +1,3 @@
+DRIVER=snd_hda_codec_hdmi
+MODALIAS=hdaudio:v10DE0060r00100100a01
+

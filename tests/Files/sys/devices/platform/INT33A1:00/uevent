@@ -1,0 +1,2 @@
+DRIVER=intel_pmc_core
+MODALIAS=acpi:INT33A1:PNP0D80:

@@ -1,0 +1,7 @@
+   Host scsi6: usb-storage
+       Vendor: Generic
+      Product: USB Storage
+Serial Number: 000000000250
+     Protocol: Transparent SCSI
+    Transport: Bulk
+       Quirks:

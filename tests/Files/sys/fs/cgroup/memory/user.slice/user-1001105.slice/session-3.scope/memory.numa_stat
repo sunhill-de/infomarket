@@ -1,0 +1,8 @@
+total=753126 N0=753218
+file=502557 N0=502594
+anon=250569 N0=250624
+unevictable=0 N0=0
+hierarchical_total=753126 N0=753218
+hierarchical_file=502557 N0=502594
+hierarchical_anon=250569 N0=250624
+hierarchical_unevictable=0 N0=0
