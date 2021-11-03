@@ -290,6 +290,18 @@ class Response
         return $this;
     }
     
+    public function errorCode(string $code): Response
+    {
+        $this->setElement('error_code',$code);
+        return $this;
+    }
+    
+    public function errorMessage(string $message): Reponse
+    {
+        $this->setElement('error_message',$this->translate($message));
+        return $this;
+    }
+    
     /**
      * When the internal unit marks a duration the best duration is calculated
      * @param unknown $timespan
