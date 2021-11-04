@@ -1,5 +1,0 @@
-enabled
-interpreter /usr/bin/lli-9
-flags: 
-offset 0
-magic 4243

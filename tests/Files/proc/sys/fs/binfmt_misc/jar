@@ -1,5 +1,0 @@
-enabled
-interpreter /usr/bin/jexec
-flags: 
-offset 0
-magic 504b0304
