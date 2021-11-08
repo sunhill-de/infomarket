@@ -3,6 +3,7 @@
 namespace Sunhill\InfoMarket\Test\Marketeers;
 
 use Sunhill\InfoMarket\Marketeers\MarketeerBase;
+use Sunhill\InfoMarket\Marketeers\Response\Response;
 
 class FakeMarketeer extends MarketeerBase
 {
