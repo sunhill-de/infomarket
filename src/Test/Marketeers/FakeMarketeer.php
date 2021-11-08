@@ -11,20 +11,31 @@ class FakeMarketeer extends MarketeerBase
     {
         return [
             'test.item'=>'getTestItem',
-            'test.catchall'=>'getTestCatchall',
+            'readonly.test'=>'getReadonlyTest',
+            'writeonly.test'=>'getWriteonlyTest',
             'test.array.*.item'=>'getTestArray',
             'another.*.array.*'=>'getAnotherArray'
         ];
     }
     
-    protected function itemIsReadable(string $name): bool
+    protected function itemIsReadable(string $name,$credentials): bool
     {
-        return true;        
+        switch ($name) {
+            case 'writeonly.test':
+                return false;
+            default:
+                return true;
+        }
     }
     
-    protected function itemIsWriteable(string $name): bool
+    protected function itemIsWriteable(string $name, $credentials): bool
     {
-        return false;    
+        switch ($name) {
+            case 'readonly.test':
+                return false;
+            default:
+                return true;
+        }
     }
     
     protected function getItemResponse(string $name): Response

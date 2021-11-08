@@ -29,12 +29,12 @@ class Raspberry extends MarketeerBase
         ];
     }
        
-    protected function itemIsReadable(string $item): bool
+    protected function itemIsReadable(string $item, $credentials): bool
     {
         return true;
     }
     
-    protected function itemIsWriteable(string $item): bool
+    protected function itemIsWriteable(string $item, $credentials): bool
     {
         return false;
     }

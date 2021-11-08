@@ -125,6 +125,33 @@ abstract class MarketeerBase
     }
     
     /**
+     * Used to check, if the given item has some restrictions. It returns an associative
+     * array with the field 'read' and 'write' with an associated usergroup. By default
+     * this group is 'anybody' which means that anybody can access this information. 
+     * @param string $name
+     * @throws MarketeerException
+     * @return string
+     */
+    public function getRestrictions(string $name): array
+    {
+        if ($this->offersItem($name)) {
+            return $this->getItemRestrictions($name);
+        } else {
+            throw new MarketeerException("The item '$name' doesn't exists.");
+        }
+    }
+    
+    /**
+     * Marketeers can overwrite this method to provide restrictions for the access
+     * @param string $name
+     * @return NULL
+     */
+    protected function getItemRestrictions(string $name): array
+    {
+        return ['read'=>'anybody','write'=>'anybody'];     
+    }
+    
+    /**
      * Returns if the given item is readable or raises an exception if it doesn't exist
      * @param string $name
      * @throws MarketeerException
@@ -145,7 +172,8 @@ abstract class MarketeerBase
      * @param string $name
      * @return bool
      */
-    abstract protected function itemIsReadable(string $name): bool;
+    abstract protected function itemIsReadable(string $name, $credentials): bool;
+
     
     /**
      * Returns if the given item is writeable or raises an exception if it doesn't exist
@@ -153,7 +181,7 @@ abstract class MarketeerBase
      * @throws MarketeerException
      * @return bool
      */
-    public function isWritable(string $name): bool
+    public function isWritable(string $name, $credentials = null): bool
     {
         if ($this->offersItem($name)) {
             return $this->itemIsWritable($name);
@@ -168,7 +196,7 @@ abstract class MarketeerBase
      * @param string $name
      * @return bool
      */
-    abstract protected function itemIsWriteable(string $name): bool;
+    abstract protected function itemIsWriteable(string $name, $credentials): bool;
     
     private function calculateGetterName(string $name): string
     {

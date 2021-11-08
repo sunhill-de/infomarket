@@ -5,10 +5,9 @@ namespace Sunhill\InfoMarket\Test\Marketeers;
 use Sunhill\InfoMarket\Marketeers\MarketeerBase;
 use Sunhill\InfoMarket\Marketeers\Response\Response;
 
-class FakeMarketeer extends MarketeerBase
+class FakeMarketeer2 extends MarketeerBase
 {
-    protected $indicator;
-    
+
     protected function getOffering(): array
     {
         return [
@@ -17,12 +16,12 @@ class FakeMarketeer extends MarketeerBase
         ];
     }
     
-    protected function itemIsReadable(string $name): bool
+    protected function itemIsReadable(string $name, $credentials): bool
     {
         return true;        
     }
     
-    protected function itemIsWriteable(string $name): bool
+    protected function itemIsWriteable(string $name, $credentials): bool
     {
         return false;    
     }
