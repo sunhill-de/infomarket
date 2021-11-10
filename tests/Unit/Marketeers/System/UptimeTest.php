@@ -29,12 +29,12 @@ class UptimeTest extends InfoMarketTestCase
     public function OffersItemProvider()
     {
         return [
-            ['uptime.seconds',true],
-            ['uptime.duration',true],
-            ['idletime.seconds',true],
-            ['idletime.duration',true],
-            ['average_idletime.seconds',true],
-            ['average_idletime.duration',true],
+            ['system.uptime.seconds',true],
+            ['system.uptime.duration',true],
+            ['system.idletime.seconds',true],
+            ['system.idletime.duration',true],
+            ['system.average_idletime.seconds',true],
+            ['system.average_idletime.duration',true],
             ['some.item',false]
         ];
     }
@@ -45,7 +45,7 @@ class UptimeTest extends InfoMarketTestCase
             ->setMethods(['getData'])    
             ->getMock();
         $test->method('getData')->willReturn("1131440.44 4488358.31\n");
-        $response = $test->getItem('uptime.seconds');
+        $response = $test->getItem('system.uptime.seconds');
         $this->assertEquals(1131440,$response->getElement('value'));
     }
     
@@ -55,7 +55,7 @@ class UptimeTest extends InfoMarketTestCase
         ->setMethods(['getData'])
         ->getMock();
         $test->method('getData')->willReturn("1131440.44 4488358.31\n");
-        $response = $test->getItem('uptime.duration');
+        $response = $test->getItem('system.uptime.duration');
         $this->assertEquals('13 days and 2 hours',$response->getElement('human_readable_value'));
     }
     
@@ -65,7 +65,7 @@ class UptimeTest extends InfoMarketTestCase
         ->setMethods(['getData'])
         ->getMock();
         $test->method('getData')->willReturn("1131440.44 4488358.31\n");
-        $response = $test->getItem('idletime.seconds');
+        $response = $test->getItem('system.idletime.seconds');
         $this->assertEquals(4488358,$response->getElement('value'));
     }
     
@@ -75,7 +75,7 @@ class UptimeTest extends InfoMarketTestCase
         ->setMethods(['getData'])
         ->getMock();
         $test->method('getData')->willReturn("1131440.44 4488358.31\n");
-        $response = $test->getItem('idletime.duration');
+        $response = $test->getItem('system.idletime.duration');
         $this->assertEquals('51 days and 22 hours',$response->getElement('human_readable_value'));
     }
     
@@ -86,7 +86,7 @@ class UptimeTest extends InfoMarketTestCase
         ->getMock();
         $test->method('getData')->willReturn("1131440.44 4488358.31\n");
         $test->method('getCPUCount')->willReturn(4);
-        $response = $test->getItem('average_idletime.seconds');
+        $response = $test->getItem('system.average_idletime.seconds');
         $this->assertEquals((int)(4488358/4),$response->getElement('value'));
     }
     
@@ -96,7 +96,7 @@ class UptimeTest extends InfoMarketTestCase
         ->setMethods(['getData'])
         ->getMock();
         $test->method('getData')->willReturn("1131440.44 4488358.31\n");
-        $response = $test->getItem('average_idletime.duration');
+        $response = $test->getItem('system.average_idletime.duration');
         $this->assertEquals('12 days and 23 hours',$response->getElement('human_readable_value'));
     }
     
