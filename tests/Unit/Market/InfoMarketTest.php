@@ -13,6 +13,25 @@ use Sunhill\InfoMarket\Marketeers\Response\Response;
 class InfoMarketTest extends InfoMarketTestCase
 {
 
+    /**
+     * @dataProvider HardwiredProvider
+     */
+    public function testHardwiredInfos($path,$element,$answer)
+    {
+        $test = new InfoMarket();
+        $info = $test->readItem($path);
+        $info_array = json_decode($info,true);
+        $this->assertEquals($answer,$info_array[$element]);
+    }
+    
+    public function HardwiredProvider()
+    {
+        return [
+            ['infomarket.name','value','InfoMarket'],
+            ['infomarket.version','result','OK'],
+        ];
+    }
+    
     public function testInitEmpty()
     {
         $test = new InfoMarket();
