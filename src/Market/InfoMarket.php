@@ -17,6 +17,8 @@ namespace Sunhill\InfoMarket\Market;
 use Sunhill\InfoMarket\Marketeers\MarketeerBase;
 use Sunhill\InfoMarket\Market\MarketException;
 
+define('CURRENT_VERSION','0.1');
+
 class InfoMarket
 {
   
@@ -66,6 +68,9 @@ class InfoMarket
   
   protected function readSingleItem(string $path, $credentials): string
   {
+      if ($result = $this->readHardwiredResult($path)) {
+        return $result;
+      }
       foreach ($this->marketeers as $marketeer) {
           if ($marketeer->offersItem($path)) {
               return $this->getAnswer($marketeer,$path,$credentials);
@@ -73,6 +78,22 @@ class InfoMarket
       }
   }
 
+  /**
+   * Hardwired informations are informations that are not routet through a marketeer but answered directly. Mostly for testing purposes
+   * @param $path string: The requested path
+   * @return string|bool Either the json result (if found) or false (if not found)
+   */
+  protected function readHardwiredResult(string $path)
+  {
+    switch ($path) {
+      case 'infomarket.name':
+          return (new Result())->OK()->request($path)->type('String')->unit(' ')->value('InfoMarket')->get();
+      case 'infomarket.version':
+          return (new Result())->OK()->request($path)->type('String')->unit(' ')->value(CURRENT_VERSION)->get();
+    }
+    return false;
+  }
+  
   protected function getAnswer($marketeer, string $path, $credentials): string 
   {
       if (!$marketeer->isReadable($path)) {
