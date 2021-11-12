@@ -172,7 +172,7 @@ abstract class MarketeerBase
      * @param string $name
      * @return bool
      */
-    abstract protected function itemIsReadable(string $name, $credentials): bool;
+    abstract protected function itemIsReadable(string $name): bool;
 
     
     /**
@@ -196,7 +196,7 @@ abstract class MarketeerBase
      * @param string $name
      * @return bool
      */
-    abstract protected function itemIsWriteable(string $name, $credentials): bool;
+    abstract protected function itemIsWriteable(string $name): bool;
     
     private function calculateGetterName(string $name): string
     {

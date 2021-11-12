@@ -18,7 +18,7 @@ class FakeMarketeer extends MarketeerBase
         ];
     }
     
-    protected function itemIsReadable(string $name,$credentials): bool
+    protected function itemIsReadable(string $name): bool
     {
         switch ($name) {
             case 'writeonly.test':
@@ -28,7 +28,7 @@ class FakeMarketeer extends MarketeerBase
         }
     }
     
-    protected function itemIsWriteable(string $name, $credentials): bool
+    protected function itemIsWriteable(string $name): bool
     {
         switch ($name) {
             case 'readonly.test':
@@ -49,7 +49,8 @@ class FakeMarketeer extends MarketeerBase
     
     protected function getTestItem(): Response
     {
-        
+        $response = new Response();
+        return $response->OK()->unit(' ')->type('Integer')->value(123);
     }
     
     protected function getTestCatchall(): Response
