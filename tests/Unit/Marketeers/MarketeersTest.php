@@ -89,4 +89,5 @@ class MarketeersTest extends InfoMarketTestCase
         $test->expects($this->once())->method('getAnotherArray')->with('test','item');
         $test->getItem('another.test.array.item');
     }
+    
 }

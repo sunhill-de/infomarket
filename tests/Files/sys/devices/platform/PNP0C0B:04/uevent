@@ -1,2 +1,0 @@
-DRIVER=acpi-fan
-MODALIAS=acpi:PNP0C0B:

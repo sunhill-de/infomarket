@@ -106,7 +106,7 @@ class InfoMarket
           $response = new Respose();
           return $response->failed()->errorCode('NOTALLOWED')->errorMessage('You are not allowed to read this item')->get();          
       }
-      $response = $marketeer->getItem($path);
+      $response = $marketeer->getItem($path)->request($path);
       return $response->get();
   }
   

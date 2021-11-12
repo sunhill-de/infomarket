@@ -1,2 +1,0 @@
-DRIVER=coretemp
-MODALIAS=platform:coretemp

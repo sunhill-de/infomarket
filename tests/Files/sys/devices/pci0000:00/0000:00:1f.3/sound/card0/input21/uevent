@@ -1,7 +1,0 @@
-PRODUCT=0/0/0/0
-NAME="HDA Intel PCH Line Out Side"
-PHYS="ALSA"
-PROP=0
-EV=21
-SW=40
-MODALIAS=input:b0000v0000p0000e0000-e0,5,kramlsfw6,

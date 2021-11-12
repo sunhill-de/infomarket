@@ -85,7 +85,7 @@ class InfoMarketTest extends InfoMarketTestCase
         $market = new InfoMarket();
         $market->installMarketeer($test);
         
-        $this->assertEquals('{}',$this->invokeMethod($market,'getAnswer',[$test,'test.item',null]));
+        $this->assertEquals('{"request":"test.item"}',$this->invokeMethod($market,'getAnswer',[$test,'test.item',null]));
     }
     
     public function testReadSingleItem()
@@ -100,7 +100,7 @@ class InfoMarketTest extends InfoMarketTestCase
         $market = new InfoMarket();
         $market->installMarketeer($test);
         
-        $this->assertEquals('{}',$this->invokeMethod($market,'readSingleItem',['test.item',null]));      
+        $this->assertEquals('{"request":"test.item"}',$this->invokeMethod($market,'readSingleItem',['test.item',null]));      
     }
 
     public function testReadItem()
@@ -115,8 +115,23 @@ class InfoMarketTest extends InfoMarketTestCase
         $market = new InfoMarket();
         $market->installMarketeer($test);
         
-        $this->assertEquals('{}',$this->invokeMethod($market,'readItem',['test.item',null]));
+        $this->assertEquals('{"request":"test.item"}',$this->invokeMethod($market,'readItem',['test.item',null]));
     }
     
+    public function testAppendRequest()
+    {
+        $test = $this->getMockBuilder(FakeMarketeer::class)
+        ->setMethods(['getItem'])
+        ->getMock();
+        $result = new Response();
+        $result = $result->OK()->type('Integer')->unit(' ')->value('123');
+        $test->expects($this->any())->method('getItem')->with('test.item')->willReturn($result);
+        
+        $market = new InfoMarket();
+        $market->installMarketeer($test);
+        
+        $result = json_decode($market->readItem('test.item'),true);
+        $this->assertEquals('test.item',$result['request']);
+    }
     
 }
