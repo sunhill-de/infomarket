@@ -16,6 +16,7 @@ namespace Sunhill\InfoMarket\Market;
 
 use Sunhill\InfoMarket\Marketeers\MarketeerBase;
 use Sunhill\InfoMarket\Market\MarketException;
+use Sunhill\InfoMarket\Marketeers\Response\Response;
 
 define('CURRENT_VERSION','0.1');
 
