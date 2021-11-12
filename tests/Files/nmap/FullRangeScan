@@ -1,0 +1,85 @@
+Starting Nmap 7.80 ( https://nmap.org ) at 2021-05-27 20:56 CEST
+Nmap scan report for 192.168.3.1
+Host is up (0.00052s latency).
+MAC Address: D0:50:99:58:F9:9D (ASRock Incorporation)
+Nmap scan report for 192.168.3.2
+Host is up (0.00017s latency).
+MAC Address: DC:A6:32:64:5D:FC (Raspberry Pi Trading)
+Nmap scan report for 192.168.3.3
+Host is up (0.00021s latency).
+MAC Address: E4:5F:01:1D:0A:97 (Unknown)
+Nmap scan report for hebe.sonnenhuegel.local (192.168.3.4)
+Host is up (0.00027s latency).
+MAC Address: B8:27:EB:3F:5D:97 (Raspberry Pi Foundation)
+Nmap scan report for 192.168.3.11
+Host is up (0.0011s latency).
+MAC Address: 52:54:00:AC:26:89 (QEMU virtual NIC)
+Nmap scan report for 192.168.3.12
+Host is up (0.014s latency).
+MAC Address: 10:DA:43:D7:24:75 (Netgear)
+Nmap scan report for 192.168.3.15
+Host is up (0.0012s latency).
+MAC Address: 52:54:00:F1:57:80 (QEMU virtual NIC)
+Nmap scan report for 192.168.3.16
+Host is up (0.00072s latency).
+MAC Address: 52:54:00:1D:22:06 (QEMU virtual NIC)
+Nmap scan report for 192.168.3.31
+Host is up (0.000074s latency).
+MAC Address: 80:2A:A8:8F:92:7A (Ubiquiti Networks)
+Nmap scan report for 192.168.3.64
+Host is up (0.058s latency).
+MAC Address: 3C:8C:F8:A0:7D:72 (Trendnet)
+Nmap scan report for 192.168.3.65
+Host is up (0.081s latency).
+MAC Address: 00:0C:43:F0:96:0E (Ralink Technology)
+Nmap scan report for 192.168.3.68
+Host is up (0.11s latency).
+MAC Address: 00:0C:43:E0:86:A8 (Ralink Technology)
+Nmap scan report for 192.168.3.153
+Host is up (0.00088s latency).
+MAC Address: 44:D9:E7:D4:65:92 (Ubiquiti Networks)
+Nmap scan report for 192.168.3.156
+Host is up (0.00063s latency).
+MAC Address: 44:D9:E7:D4:69:9C (Ubiquiti Networks)
+Nmap scan report for 192.168.3.157
+Host is up (0.044s latency).
+MAC Address: 78:11:DC:80:7D:21 (Xiaomi Electronics,co.)
+Nmap scan report for 192.168.3.171
+Host is up (0.0025s latency).
+MAC Address: 18:E8:29:E0:DF:BC (Ubiquiti Networks)
+Nmap scan report for 192.168.3.176
+Host is up (0.082s latency).
+MAC Address: 00:17:C8:5C:EA:FC (Kyocera Display)
+Nmap scan report for 192.168.3.181
+Host is up (0.075s latency).
+MAC Address: DC:BD:7A:63:1B:35 (Unknown)
+Nmap scan report for 192.168.3.193
+Host is up (0.0030s latency).
+MAC Address: 6C:56:97:09:0C:AC (Amazon Technologies)
+Nmap scan report for 192.168.3.211
+Host is up (0.076s latency).
+MAC Address: 74:58:F3:44:26:F4 (Unknown)
+Nmap scan report for 192.168.3.215
+Host is up (0.00049s latency).
+MAC Address: B8:27:EB:6A:08:C2 (Raspberry Pi Foundation)
+Nmap scan report for 192.168.3.217
+Host is up (0.00028s latency).
+MAC Address: 2C:CC:44:69:C3:B4 (Sony Interactive Entertainment)
+Nmap scan report for 192.168.3.227
+Host is up (0.084s latency).
+MAC Address: 74:58:F3:F0:79:C8 (Unknown)
+Nmap scan report for 192.168.3.230
+Host is up (0.063s latency).
+MAC Address: 30:AB:6A:53:5D:2C (Unknown)
+Nmap scan report for 192.168.3.231
+Host is up (0.00043s latency).
+MAC Address: 00:50:08:0A:02:5B (Tiva Microcomputer (tmc))
+Nmap scan report for 192.168.3.243
+Host is up (0.077s latency).
+MAC Address: B8:8A:EC:1F:18:47 (Nintendo)
+Nmap scan report for 192.168.3.250
+Host is up (0.00010s latency).
+MAC Address: 68:72:DC:06:B4:B3 (Cetory.tv Company Limited)
+Nmap scan report for 192.168.3.207
+Host is up.
+Nmap done: 256 IP addresses (28 hosts up) scanned in 2.20 seconds
