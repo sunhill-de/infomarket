@@ -54,12 +54,12 @@ class Uptime extends MarketeerBase
         ];
     }
        
-    protected function itemIsReadable(string $item, $credentials): bool
+    protected function itemIsReadable(string $item): bool
     {
         return true;
     }
     
-    protected function itemIsWriteable(string $item, $credentials): bool
+    protected function itemIsWriteable(string $item): bool
     {
         return false;
     }

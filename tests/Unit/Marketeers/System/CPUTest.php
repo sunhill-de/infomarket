@@ -48,7 +48,7 @@ class CPUTest extends InfoMarketTestCase
     public function valuesProvider()
     {
         return [
-            ['getCPUCount',null,4],
+            ['getCount',[],4],
             ['getVendor',[0],'GenuineIntel']
         ];
     }
