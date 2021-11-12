@@ -88,9 +88,9 @@ class InfoMarket
   {
     switch ($path) {
       case 'infomarket.name':
-          return (new Result())->OK()->request($path)->type('String')->unit(' ')->value('InfoMarket')->get();
+          return (new Response())->OK()->request($path)->type('String')->unit(' ')->value('InfoMarket')->get();
       case 'infomarket.version':
-          return (new Result())->OK()->request($path)->type('String')->unit(' ')->value(CURRENT_VERSION)->get();
+          return (new Response())->OK()->request($path)->type('String')->unit(' ')->value(CURRENT_VERSION)->get();
     }
     return false;
   }
