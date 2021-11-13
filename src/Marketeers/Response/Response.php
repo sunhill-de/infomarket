@@ -31,17 +31,25 @@ class Response
     {
         $this->elements->$name = $value;
     }
-        
+    
+    /**
+     * Checks if a update field was given. If not assume asap
+     */
+    protected function checkUpdate()
+    {
+        if (!$this->hasElement('update')) {
+            $this->setElement('update','asap');
+        }
+    }
+    
     /**
      * Returns the json response
      * @return string The response as a json string
      */
     public function get(): string
     {
+        $this->checkUpdate();
         return json_encode($this->elements);
-        $result = '{';
-        
-        return $result.'}';
     }
     
     /**
@@ -50,6 +58,7 @@ class Response
      */
     public function getStdClass(): StdClass
     {
+        $this->checkUpdate();
         return $this->elements;    
     }
     
@@ -151,7 +160,7 @@ class Response
     {
         switch ($unit) {
             case 's':       
-            case 'C':
+            case 'K':
             case 'p':
             case 'm':
             case 'c':
@@ -186,7 +195,7 @@ class Response
             case ' ':
                 $this->setElement('unit','');
                 break;
-            case 'c':
+            case 'C':
                 $this->setElement('unit','°C');
                 break;
             case 'p':
@@ -212,6 +221,23 @@ class Response
                 break;
         }        
     }
+
+    public function update(string $key)
+    {
+        switch ($key) {
+            case 'asap':
+            case 'second':
+            case 'minute':
+            case 'hour':
+            case 'day':
+            case 'late':
+                $this->setElement('update',$key);  
+                break;
+            default:
+                throw new MarketeerException("Unkown update frequency '$key'.");
+        }
+        return $this;
+    }
     
     /**
      * Sets the semantic and semantic_int field according to the given (internal) semantic vaoue
@@ -225,6 +251,7 @@ class Response
             case 'air_temp':
             case 'uptime':
             case 'number':
+            case 'name':
             case 'capacity':
                 $this->setElement('semantic_int',$unit);
                 $this->setSemantic($unit);
@@ -284,7 +311,7 @@ class Response
                 case 'd':
                     $this->setElement('human_readable_value',$this->getDuration($value));
                     break;
-                case 'C':
+                case 'K':
                     $this->setElement('human_readable_value',$this->getCapacity($value));
                     break;
                 case ' ':
@@ -375,7 +402,7 @@ class Response
 
     public function capacity($number)
     {
-        return $this->OK()->type('Integer')->unit('C')->semantic('number')->value($number);
+        return $this->OK()->type('Integer')->unit('c')->semantic('number')->value($number);
     }
     
 }
