@@ -20,8 +20,8 @@ use Sunhill\InfoMarket\Marketeers\Response\Response;
 class CPU extends MarketeerBase
 {
     private $cpu_info;
-    
-    private $path_to_cpu_temp;
+        
+    private $cpu_temp;
     
     /**
      * Returns what items this marketeer offers
@@ -33,6 +33,8 @@ class CPU extends MarketeerBase
             'system.cpu.count'=>'getCount',
             'system.cpu.*.vendor'=>'getVendor',
             'system.cpu.*.model'=>'getModel',
+            'system.cpu.*.bogomips'=>'getBogomips',
+            'system.cpu.temp'=>'getTemp',            
         ];
     }
        
@@ -49,6 +51,11 @@ class CPU extends MarketeerBase
     protected function getProcCpuinfo(): string
     {
         return file_get_contents('/proc/cpuinfo');
+    }
+    
+    protected function getThermalDir(): string
+    {
+        return '/sys/class/thermal';    
     }
     
     protected function readCPUInfo()
@@ -87,9 +94,27 @@ class CPU extends MarketeerBase
         $this->cpu_info[] = $current_cpu;
     }
     
+    protected function readCPUTemp()
+    {
+        $dir = $this->getThermalDir();
+        
+        $directory = dir($dir);
+        while (false !== ($entry = $directory->read())) {
+            if (substr($entry,0,12) == 'thermal_zone') {
+                $type = trim(file_get_contents($dir.'/'.$entry.'/type'));
+                if (($type == 'x86_pkg_temp') || ($type == 'cpu-thermal')) {
+                    $temp = trim(file_get_contents($dir.'/'.$entry.'/temp'));
+                    
+                    $this->cpu_temp = $temp/1000;
+                }
+            }
+        }
+    }
+    
     protected function readIt()
     {
-        $this->readCPUInfo();    
+        $this->readCPUInfo();
+        $this->readCPUTemp();
     }
     
     private function check()
@@ -129,6 +154,26 @@ class CPU extends MarketeerBase
         return isset($this->cpu_info[$index]['model'])?$this->cpu_info[$index]['model']:'unknown';
     }
     
+    /**
+     * Calculates the number of cpu cores
+     * @return int: The number of cores
+     */
+    private function getCPUBogomips(int $index): string
+    {
+        $this->check();
+        return isset($this->cpu_info[$index]['bogomips'])?$this->cpu_info[$index]['bogomips']:0;
+    }
+    
+    /**
+     * Calculates the number of cpu cores
+     * @return int: The number of cores
+     */
+    private function getCPUTemp(): string
+    {
+        $this->check();
+        return isset($this->cpu_temp)?$this->cpu_temp:0;
+    }
+    
     protected function getCount(): Response
     {
         $response = new Response();
@@ -163,6 +208,30 @@ class CPU extends MarketeerBase
         ->unit(' ')
         ->semantic('name')
         ->value($this->getCPUModel($index));
+    }
+    
+    protected function getBogomips($index): Response
+    {
+        $result = new Response();
+        return $result
+        ->OK()
+        ->update('late')
+        ->type('Float')
+        ->unit(' ')
+        ->semantic('name')
+        ->value($this->getCPUBogomips($index));
+    }
+    
+    protected function getTemp(): Response
+    {
+        $result = new Response();
+        return $result
+        ->OK()
+        ->update('late')
+        ->type('Float')
+        ->unit('C')
+        ->semantic('temp')
+        ->value($this->getCPUTemp());
     }
     
 }
