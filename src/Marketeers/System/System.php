@@ -1,7 +1,7 @@
 <?php
 /**
- * @file Uptime.php
- * Provides the Information from /proc/uptime
+ * @file System.php
+ * Provides the Information from the system that are not cpu, disks, memory
  * Lang en
  * Reviewstatus: 2021-10-30
  * Localization: none
@@ -17,7 +17,7 @@ namespace Sunhill\InfoMarket\Marketeers\System;
 use Sunhill\InfoMarket\Marketeers\MarketeerBase;
 use Sunhill\InfoMarket\Marketeers\Response\Response;
 
-class Uptime extends MarketeerBase
+class System extends MarketeerBase
 {
     protected function getData()
     {

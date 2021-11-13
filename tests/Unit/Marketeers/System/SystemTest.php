@@ -3,14 +3,14 @@
 namespace Sunhill\InfoMarket\Tests\Unit\System;
 
 use Sunhill\InfoMarket\Test\InfoMarketTestCase;
-use Sunhill\InfoMarket\Marketeers\System\Uptime;
+use Sunhill\InfoMarket\Marketeers\System\System;
 
-class UptimeTest extends InfoMarketTestCase
+class SystemTest extends InfoMarketTestCase
 {
     
     public function testReadSuccess()
     {
-        $test = new Uptime();
+        $test = new System();
         $data = $this->invokeMethod($test,'getData');
         $this->assertFalse(empty($data));
     }
@@ -22,7 +22,7 @@ class UptimeTest extends InfoMarketTestCase
      */
     public function testOffersItem($element,$expect)
     {
-        $test = new Uptime();
+        $test = new System();
         $this->assertEquals($expect,$test->offersItem($element));
     }
     
@@ -41,7 +41,7 @@ class UptimeTest extends InfoMarketTestCase
     
     public function testGetUptimeSeconds()
     {
-        $test = $this->getMockBuilder(Uptime::class)
+        $test = $this->getMockBuilder(System::class)
             ->setMethods(['getData'])    
             ->getMock();
         $test->method('getData')->willReturn("1131440.44 4488358.31\n");
@@ -51,7 +51,7 @@ class UptimeTest extends InfoMarketTestCase
     
     public function testGetUptimeDuration()
     {
-        $test = $this->getMockBuilder(Uptime::class)
+        $test = $this->getMockBuilder(System::class)
         ->setMethods(['getData'])
         ->getMock();
         $test->method('getData')->willReturn("1131440.44 4488358.31\n");
@@ -61,7 +61,7 @@ class UptimeTest extends InfoMarketTestCase
     
     public function testGetIdletimeSeconds()
     {
-        $test = $this->getMockBuilder(Uptime::class)
+        $test = $this->getMockBuilder(System::class)
         ->setMethods(['getData'])
         ->getMock();
         $test->method('getData')->willReturn("1131440.44 4488358.31\n");
@@ -71,7 +71,7 @@ class UptimeTest extends InfoMarketTestCase
     
     public function testGetIdletimeDuration()
     {
-        $test = $this->getMockBuilder(Uptime::class)
+        $test = $this->getMockBuilder(System::class)
         ->setMethods(['getData'])
         ->getMock();
         $test->method('getData')->willReturn("1131440.44 4488358.31\n");
@@ -81,7 +81,7 @@ class UptimeTest extends InfoMarketTestCase
     
     public function testGetAverageIdletimeSeconds()
     {
-        $test = $this->getMockBuilder(Uptime::class)
+        $test = $this->getMockBuilder(System::class)
         ->setMethods(['getData','getCPUCount'])
         ->getMock();
         $test->method('getData')->willReturn("1131440.44 4488358.31\n");
@@ -92,7 +92,7 @@ class UptimeTest extends InfoMarketTestCase
     
     public function testGetAverageIdletimeDuration()
     {
-        $test = $this->getMockBuilder(Uptime::class)
+        $test = $this->getMockBuilder(System::class)
         ->setMethods(['getData'])
         ->getMock();
         $test->method('getData')->willReturn("1131440.44 4488358.31\n");
