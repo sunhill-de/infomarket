@@ -73,6 +73,11 @@ class InfoMarketTest extends InfoMarketTestCase
         $this->assertEquals(2,count($this->getProtectedProperty($test,'marketeers')));
     }
     
+    protected function isJsonStr($string) {
+        json_decode($string);
+        return json_last_error() === JSON_ERROR_NONE;
+    }
+    
     public function testGetAnswer()
     {
         $test = $this->getMockBuilder(FakeMarketeer::class)
@@ -85,7 +90,7 @@ class InfoMarketTest extends InfoMarketTestCase
         $market = new InfoMarket();
         $market->installMarketeer($test);
         
-        $this->assertEquals('{"request":"test.item"}',$this->invokeMethod($market,'getAnswer',[$test,'test.item',null]));
+        $this->assertTrue($this->isJsonStr($this->invokeMethod($market,'getAnswer',[$test,'test.item',null])));
     }
     
     public function testReadSingleItem()
@@ -100,7 +105,7 @@ class InfoMarketTest extends InfoMarketTestCase
         $market = new InfoMarket();
         $market->installMarketeer($test);
         
-        $this->assertEquals('{"request":"test.item"}',$this->invokeMethod($market,'readSingleItem',['test.item',null]));      
+        $this->assertTrue($this->isJsonStr($this->invokeMethod($market,'readSingleItem',['test.item',null])));      
     }
 
     public function testReadItem()
@@ -115,7 +120,7 @@ class InfoMarketTest extends InfoMarketTestCase
         $market = new InfoMarket();
         $market->installMarketeer($test);
         
-        $this->assertEquals('{"request":"test.item"}',$this->invokeMethod($market,'readItem',['test.item',null]));
+        $this->assertTrue($this->isJsonStr($this->invokeMethod($market,'readItem',['test.item',null])));
     }
     
     public function testAppendRequest()
