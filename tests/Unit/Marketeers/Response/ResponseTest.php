@@ -27,7 +27,7 @@ class ResponseTest extends InfoMarketTestCase
     public function testReturnAEmptyJson()
     {
         $test = new Response();
-        $this->assertEquals('{}',$test->get());
+        $this->assertEquals('{',$test->get()[0]);
     }
     
     public function testAddEntry()
@@ -140,7 +140,7 @@ class ResponseTest extends InfoMarketTestCase
             ['P','P','%'],
             ['?','except',null],
             ['d','d',null],
-            ['C','C',null],
+            ['K','K',null],
             [' ',' ',''],
         ];        
     }
@@ -228,20 +228,20 @@ class ResponseTest extends InfoMarketTestCase
             ['d','2 years and 1 day',60*60*24*365*2+60*60*24+60*60+35],
             ['d','2 years and 2 days',60*60*24*365*2+60*60*24*2+60*60*2+35],     
 // Test Capacity
-            ['C','1 Byte',1],
-            ['C','2 Byte',2],
-            ['C','1 kB',1000],
-            ['C','1 kB',1001],
-            ['C','1.1 kB',1100],        
-            ['C','1 MB',1000*1000],
-            ['C','1 MB',1000*1010],
-            ['C','1.1 MB',1000*1100],
-            ['C','1 GB',1000*1000*1000],
-            ['C','1 GB',1000*1010*1000],
-            ['C','1.1 GB',1000*1100*1000],
-            ['C','1 TB',1000*1000*1000*1000],
-            ['C','1 TB',1000*1010*1000*1000],
-            ['C','1.1 TB',1000*1100*1000*1000],
+            ['K','1 Byte',1],
+            ['K','2 Byte',2],
+            ['K','1 kB',1000],
+            ['K','1 kB',1001],
+            ['K','1.1 kB',1100],        
+            ['K','1 MB',1000*1000],
+            ['K','1 MB',1000*1010],
+            ['K','1.1 MB',1000*1100],
+            ['K','1 GB',1000*1000*1000],
+            ['K','1 GB',1000*1010*1000],
+            ['K','1.1 GB',1000*1100*1000],
+            ['K','1 TB',1000*1000*1000*1000],
+            ['K','1 TB',1000*1010*1000*1000],
+            ['K','1.1 TB',1000*1100*1000*1000],
         ];        
     }
     
