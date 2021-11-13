@@ -125,7 +125,7 @@ class Disk extends MarketeerBase
             
             'partitions.count'=>'getPartititionCount',
             'partitions.*.name'=>'getPartititionName',
-            'partitions.*.capacity'=>'getPartititionCapacity',
+            'partitions.*.capacity'=>'getPartitionCapacity',
             'partitions.*.used.bytes'=>'getPartititionUsedBytes',
             'partitions.*.used.capacity'=>'getPartititionUsedCapacity',
             'partitions.*.used.percent'=>'getPartititionUsedPercent',
@@ -153,7 +153,7 @@ class Disk extends MarketeerBase
         $i = 0;
         foreach ($list as $key => $value) {
             if ($index == $i++) {
-                return $value;
+                return $key;
             }
         }
         return false;
@@ -164,33 +164,62 @@ class Disk extends MarketeerBase
         return $this->getAnythingByIndex($index);
     }
     
-    protected function getDiskCount() : Response
+    private function check()
     {
         if (is_null($this->disks)) {
             $this->readIt();
-        }
+        }        
+    }
+    
+    protected function getDiskCount() : Response
+    {
+        $this->check();
+        
         $return = new Response();
         return $return->number(count($this->disks));
     }
     
     protected function getDiskCapacity($index) : Response
     {
-        if (is_null($this->disks)) {
-            $this->readIt();
-        }
+        $this->check();
+        
         $disk = $this->getAnythingByIndex($this->disks,$index);
         $return = new Response();
-        return $return->type('Integer')->unit('C')->semantic('capacity')->value($disk['size']);
+        return $return->type('Integer')->unit('C')->semantic('capacity')->value($this->disks[$disk]['size']);
     }
 
+    protected function getDiskName($index): Response
+    {
+        $this->check();
+        
+        $disk = $this->getAnythingByIndex($this->disks,$index);
+        $return = new Response();
+        return $return->type('String')->unit(' ')->value($disk);        
+    }
+    
     protected function getPartitionsCount() : Response
     {
-        if (is_null($this->disks)) {
-            $this->readIt();
-        }
+        $this->check();
+        
         $return = new Response();
         return $return->number(count($this->partitions));
     }
     
+    protected function getPartitionName($index) : Response
+    {
+        $this->check();
+        
+        $disk = $this->getAnythingByIndex($this->partitions,$index);
+        $return = new Response();
+        return $return->type('String')->unit(' ')->value($disk);        
+    }
     
+    protected function getPartitionCapacity($index) : Response
+    {
+        $this->check();
+        
+        $disk = $this->getAnythingByIndex($this->partitions,$index);
+        $return = new Response();
+        return $return->type('String')->unit(' ')->value($this->partitions[$disk]['size']);
+    }
 }
