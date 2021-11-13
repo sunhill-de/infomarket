@@ -31,7 +31,7 @@ class CPUTest extends InfoMarketTestCase
         $test = $this->getMockBuilder(Uptime::class)
             ->setMethods([' getProcCpuinfo'])    
             ->getMock();
-        $test->method(' getProcCpuinfo')->willReturn(file_get_contents(dirname(__FILE__).'/../../../Files/proc/cpuinfo'));
+        $test->method(' getProcCpuinfo')->willReturn(file_get_contents(dirname(__FILE__).'/../../../Files/proc/cpuinfo1'));
         return $test;
     }
     

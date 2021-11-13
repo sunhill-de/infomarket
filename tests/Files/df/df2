@@ -1,0 +1,26 @@
+Dateisystem                Typ       Inodes IBenutzt   IFrei IUse%  1K-Blöcke    Benutzt      Verf. Verw% Datei Eingehängt auf
+udev                       devtmpfs 3055268      687 3054581    1%   12221072          0   12221072    0% -     /dev
+tmpfs                      tmpfs    3070382     1263 3069119    1%    2456308       3332    2452976    1% -     /run
+/dev/sda5                  ext4     7299072   308589 6990483    5%  114336932   43405736   65080112   41% -     /
+tmpfs                      tmpfs    3070382       32 3070350    1%   12281528       1132   12280396    1% -     /dev/shm
+tmpfs                      tmpfs    3070382        8 3070374    1%       5120          4       5116    1% -     /run/lock
+tmpfs                      tmpfs    3070382       18 3070364    1%   12281528          0   12281528    0% -     /sys/fs/cgroup
+/dev/loop1                 squashfs   11720    11720       0  100%      63360      63360          0  100% -     /snap/core20/1081
+/dev/loop2                 squashfs      29       29       0  100%        128        128          0  100% -     /snap/bare/5
+/dev/loop3                 squashfs   65095    65095       0  100%      66816      66816          0  100% -     /snap/gtk-common-themes/1519
+/dev/loop4                 squashfs     133      133       0  100%      57984      57984          0  100% -     /snap/mqtt-explorer/29
+/dev/loop5                 squashfs     479      479       0  100%      33280      33280          0  100% -     /snap/snapd/13640
+/dev/loop0                 squashfs   10803    10803       0  100%      56832      56832          0  100% -     /snap/core18/2128
+/dev/loop7                 squashfs   26221    26221       0  100%     220672     220672          0  100% -     /snap/rpi-imager/170
+/dev/loop6                 squashfs   11732    11732       0  100%      63360      63360          0  100% -     /snap/core20/1169
+/dev/loop9                 squashfs   64986    64986       0  100%      66688      66688          0  100% -     /snap/gtk-common-themes/1515
+/dev/loop10                squashfs   27807    27807       0  100%     166784     166784          0  100% -     /snap/gnome-3-28-1804/145
+/dev/loop8                 squashfs   27806    27806       0  100%     168832     168832          0  100% -     /snap/gnome-3-28-1804/161
+/dev/loop11                squashfs     474      474       0  100%      33280      33280          0  100% -     /snap/snapd/13270
+/dev/loop12                squashfs   10833    10833       0  100%      56832      56832          0  100% -     /snap/core18/2246
+/dev/loop13                squashfs   25542    25542       0  100%     201216     201216          0  100% -     /snap/rpi-imager/184
+/dev/sda1                  vfat           0        0       0     -     523248          4     523244    1% -     /boot/efi
+/dev/sdb5                  btrfs          0        0       0     - 1041830912  905329780  134914476   88% -     /home
+192.168.3.1:/data/media    nfs4           0        0       0     - 5860265984 3584478208 2273848320   62% -     /media/media
+192.168.3.1:/data/transfer nfs4           0        0       0     - 5860265984 3584478208 2273848320   62% -     /media/transfer
+tmpfs                      tmpfs    3070382       62 3070320    1%    2456304         28    2456276    1% -     /run/user/1001105

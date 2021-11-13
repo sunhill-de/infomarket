@@ -1,0 +1,30 @@
+NAME MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+loop0 7:0 0 58130432 1 loop /snap/core18/2128
+loop1 7:1 0 64770048 1 loop /snap/core20/1081
+loop2 7:2 0 4096 1 loop /snap/bare/5
+loop3 7:3 0 68378624 1 loop /snap/gtk-common-themes/1519
+loop4 7:4 0 59293696 1 loop /snap/mqtt-explorer/29
+loop5 7:5 0 34017280 1 loop /snap/snapd/13640
+loop6 7:6 0 64835584 1 loop /snap/core20/1169
+loop7 7:7 0 225845248 1 loop /snap/rpi-imager/170
+loop8 7:8 0 172761088 1 loop /snap/gnome-3-28-1804/161
+loop9 7:9 0 68259840 1 loop /snap/gtk-common-themes/1515
+loop10 7:10 0 170778624 1 loop /snap/gnome-3-28-1804/145
+loop11 7:11 0 33980416 1 loop /snap/snapd/13270
+loop12 7:12 0 58191872 1 loop /snap/core18/2246
+loop13 7:13 0 205987840 1 loop /snap/rpi-imager/184
+sda 8:0 0 120034123776 0 disk 
+sda1 8:1 0 536870912 0 part /boot/efi
+sda2 8:2 0 1024 0 part 
+sda5 8:5 0 119494672384 0 part /
+sdb 8:16 0 2000398934016 0 disk 
+sdb1 8:17 0 33561772032 0 part 
+sdb2 8:18 0 1024 0 part 
+sdb5 8:21 0 1066834853888 0 part /home
+sdb6 8:22 0 899999072256 0 part 
+sdc 8:32 0 240057409536 0 disk 
+sdc1 8:33 0 268435456 0 part 
+sdc2 8:34 0 8589934592 0 part 
+sdc3 8:35 0 107374182400 0 part 
+sdc4 8:36 0 123823808512 0 part 
+sr0 11:0 1 1073741312 0 rom 

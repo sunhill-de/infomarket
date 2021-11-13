@@ -1,0 +1,13 @@
+Filesystem     Type     Inodes  IUsed  IFree IUse% 1K-blocks    Used   Avail Use% File Mounted on
+/dev/root      ext4     949104 102951 846153   11%  15025260 5188448 9184424  37% -    /
+devtmpfs       devtmpfs  97451    394  97057    1%   1852756       0 1852756   0% -    /dev
+tmpfs          tmpfs    163499      1 163498    1%   1984852       0 1984852   0% -    /dev/shm
+tmpfs          tmpfs    163499    546 162953    1%   1984852    1440 1983412   1% -    /run
+tmpfs          tmpfs    163499      2 163497    1%      5120       0    5120   0% -    /run/lock
+tmpfs          tmpfs    163499     15 163484    1%   1984852       0 1984852   0% -    /sys/fs/cgroup
+/dev/sda1      vfat          0      0      0     -    258095   49262  208833  20% -    /boot
+/dev/zram1     ext4      89664    211  89453    1%    330768  131092  174588  43% -    /opt/zram/zram1
+overlay1       overlay   89664    211  89453    1%    330768  131092  174588  43% -    /var/lib/openhab/persistence
+/dev/zram2     ext4     115200    123 115077    1%    429960  175572  222132  45% -    /opt/zram/zram2
+overlay2       overlay  115200    123 115077    1%    429960  175572  222132  45% -    /var/log
+tmpfs          tmpfs    163499     10 163489    1%    396968       0  396968   0% -    /run/user/1002

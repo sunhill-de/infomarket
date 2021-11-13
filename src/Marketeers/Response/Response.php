@@ -186,7 +186,7 @@ class Response
             case ' ':
                 $this->setElement('unit','');
                 break;
-            case 'C':
+            case 'c':
                 $this->setElement('unit','°C');
                 break;
             case 'p':
@@ -224,6 +224,8 @@ class Response
         switch ($unit) {
             case 'air_temp':
             case 'uptime':
+            case 'number':
+            case 'capacity':
                 $this->setElement('semantic_int',$unit);
                 $this->setSemantic($unit);
                 break;
@@ -246,6 +248,13 @@ class Response
             case 'uptime':
                 $this->setElement('semantic',$this->translate('Uptime'));
                 break;
+            case 'number':
+                $this->setElement('semantic',$this->translate('Number'));
+                break;
+            case 'capacity':
+                $this->setElement('semantic',$this->translate('Capacity'));
+                break;
+                
         }
     }
 
@@ -357,6 +366,16 @@ class Response
         } else {
             return $value.' Byte';
         }
+    }
+    
+    public function number($number) 
+    {
+        return $this->OK()->type('Integer')->unit(' ')->semantic('number')->value($number);        
+    }
+
+    public function capacity($number)
+    {
+        return $this->OK()->type('Integer')->unit('C')->semantic('number')->value($number);
     }
     
 }

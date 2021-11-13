@@ -1,0 +1,9 @@
+Dateisystem    Typ        Inodes IBenutzt    IFrei IUse%  1K-Blöcke    Benutzt      Verf. Verw% Datei Eingehängt auf
+udev           devtmpfs   979312      437   978875    1%    3917248          0    3917248    0% -     /dev
+tmpfs          tmpfs      983653      735   982918    1%     786924      84360     702564   11% -     /run
+/dev/sdb1      ext4     14147584    95993 14051591    1%  221746040  121991612   88420696   58% -     /
+tmpfs          tmpfs      983653        1   983652    1%    3934612          0    3934612    0% -     /dev/shm
+tmpfs          tmpfs      983653        5   983648    1%       5120          0       5120    0% -     /run/lock
+tmpfs          tmpfs      983653       17   983636    1%    3934612          0    3934612    0% -     /sys/fs/cgroup
+/dev/md0       btrfs           0        0        0     - 5860265984 3584478852 2273847804   62% -     /data
+tmpfs          tmpfs      983653       11   983642    1%     786920          0     786920    0% -     /run/user/1000

@@ -1,0 +1,7 @@
+NAME MAJ:MIN RM SIZE RO TYPE MOUNTPOINT
+sda 8:0 1 15936061440 0 disk 
+sda1 8:1 1 268435456 0 part /boot
+sda2 8:2 1 15663431680 0 part /
+zram0 254:0 0 471859200 0 disk [SWAP]
+zram1 254:1 0 367001600 0 disk /opt/zram/zram1
+zram2 254:2 0 471859200 0 disk /opt/zram/zram2
