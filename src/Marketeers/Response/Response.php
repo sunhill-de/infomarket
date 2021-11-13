@@ -248,6 +248,7 @@ class Response
     public function semantic(string $unit): Response
     {
         switch ($unit) {
+            case 'temp':
             case 'air_temp':
             case 'uptime':
             case 'number':
@@ -269,6 +270,9 @@ class Response
     protected function setSemantic(string $unit)
     {
         switch ($unit) {
+            case 'temp':
+                $this->setElement('semantic',$this->translate('Temperature'));
+                break;
             case 'air_temp':
                 $this->setElement('semantic',$this->translate('Air temperature'));
                 break;
