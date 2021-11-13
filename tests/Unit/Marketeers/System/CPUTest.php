@@ -23,24 +23,25 @@ class CPUTest extends InfoMarketTestCase
         return [
             ['system.cpu.count',true],
             ['system.cpu.0.vendor',true],
+            ['system.cpu.0.model',true],
         ];
     }
 
-    private function getMockedMarketeer()
+    private function getMockedMarketeer(int $index)
     {
-        $test = $this->getMockBuilder(Uptime::class)
-            ->setMethods([' getProcCpuinfo'])    
+        $test = $this->getMockBuilder(CPU::class)
+            ->setMethods(['getProcCpuinfo'])    
             ->getMock();
-        $test->method(' getProcCpuinfo')->willReturn(file_get_contents(dirname(__FILE__).'/../../../Files/proc/cpuinfo1'));
+        $test->method('getProcCpuinfo')->willReturn(file_get_contents(dirname(__FILE__).'/../../../Files/proc/cpuinfo'.$index));
         return $test;
     }
     
     /**
      * @dataProvider valuesProvider
      */
-    public function testValues($path,$param,$expect)
+    public function testValues($index,$path,$param,$expect)
     {
-        $test = $this->getMockedMarketeer();
+        $test = $this->getMockedMarketeer($index);
         
         $this->assertEquals($expect,$this->invokeMethod($test,$path,$param));        
     }
@@ -48,20 +49,23 @@ class CPUTest extends InfoMarketTestCase
     public function valuesProvider()
     {
         return [
-            ['getCount',[],4],
-            ['getVendor',[0],'GenuineIntel']
+            [1,'getCPUCount',[],4],
+            [1,'getCPUVendor',[0],'GenuineIntel'],
+            [1,'getCPUModel',[0],'Intel(R) Core(TM) i5-6400 CPU @ 2.70GHz'],
+            [3,'getCPUVendor',[0],'unknown'],
+            [3,'getCPUModel',[0],'ARMv7 Processor rev 3 (v7l)'],
         ];
     }
         
     /**
      * @dataProvider getValuesProvider
      */
-    public function testGetValues($path,$value,$expect)
+    public function testGetValues($index,$path,$value,$expect)
     {
-        $test = $this->getMockedMarketeer();
+        $test = $this->getMockedMarketeer($index);
         
-        $reponse = $test->getItem($path);
-        $reponse_array = json_decode($response,true);
+        $response = $test->getItem($path)->get();
+        $response_array = json_decode($response,true);
         
         $this->assertEquals($expect,$response_array[$value]);        
     }
@@ -69,8 +73,11 @@ class CPUTest extends InfoMarketTestCase
     public function getValuesProvider()
     {
         return [
-            ['system.cpu.count','value',4],
-            ['system.cpu.0.vendor','value','GenuineIntel'],
+            [1,'system.cpu.count','value',4],
+            [1,'system.cpu.0.vendor','value','GenuineIntel'],
+            [3,'system.cpu.0.vendor','value','unknown'],
+            [1,'system.cpu.0.model','value','Intel(R) Core(TM) i5-6400 CPU @ 2.70GHz'],
+            [3,'system.cpu.0.model','value','ARMv7 Processor rev 3 (v7l)'],
         ];
     }
         

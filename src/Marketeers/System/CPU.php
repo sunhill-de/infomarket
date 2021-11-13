@@ -19,7 +19,7 @@ use Sunhill\InfoMarket\Marketeers\Response\Response;
 
 class CPU extends MarketeerBase
 {
-    private $cpu_count;
+    private $cpu_info;
     
     private $path_to_cpu_temp;
     
@@ -30,8 +30,9 @@ class CPU extends MarketeerBase
     protected function getOffering(): array
     {
         return [
-            'cpu.core_count'=>'getCount',
-            'cpu.temp'=>'getTemp',
+            'system.cpu.count'=>'getCount',
+            'system.cpu.*.vendor'=>'getVendor',
+            'system.cpu.*.model'=>'getModel',
         ];
     }
        
@@ -50,30 +51,118 @@ class CPU extends MarketeerBase
         return file_get_contents('/proc/cpuinfo');
     }
     
+    protected function readCPUInfo()
+    {
+        $this->cpu_info = [];
+        
+        $cpu_info = $this->getProcCpuinfo();
+        $current_cpu = [];
+        
+        $lines = explode("\n",$cpu_info);
+        foreach ($lines as $line) {
+            if (strpos($line,':')) {
+                list($key,$value) = explode(':',$line);
+                $key = strtolower(trim($key));
+                $value = trim($value);
+                
+                switch ($key) {
+                    case 'processor':
+                        if (count($current_cpu)) {
+                            $this->cpu_info[] = $current_cpu;
+                            $current_cpu = [];
+                        }
+                        break;
+                    case 'vendor_id':
+                        $current_cpu['vendor'] = $value;
+                        break;
+                    case 'model name':
+                        $current_cpu['model'] = $value;
+                        break;
+                    case 'bogomips':
+                        $current_cpu['bogomips'] = $value;
+                        break;
+                }
+            }
+        }
+        $this->cpu_info[] = $current_cpu;
+    }
+    
+    protected function readIt()
+    {
+        $this->readCPUInfo();    
+    }
+    
+    private function check()
+    {
+        if (is_null($this->cpu_info)) {
+            $this->readIt();
+        }
+    }
+    
     /**
      * Calculates the number of cpu cores 
      * @return int: The number of cores
      */
     private function getCPUCount(): int
     {
-        if (!is_null($this->cpu_count)) {
-            return $this->cpu_count;
-        }
-        $data = $this->getProcCpuinfo();
-        $lines = explode("\n",$data);
-        $count = 0;
-        foreach ($lines as $line) {
-            if (substr($line,0,9) == 'processor') {
-                $count++;
-            }
-        }
-        $this->cpu_count = $count;
-        return $count;    
+        $this->check();
+        return count($this->cpu_info);
+    }
+    
+    /**
+     * Calculates the number of cpu cores
+     * @return int: The number of cores
+     */
+    private function getCPUVendor(int $index): string
+    {
+        $this->check();
+        return isset($this->cpu_info[$index]['vendor'])?$this->cpu_info[$index]['vendor']:'unknown';
+    }
+    
+    /**
+     * Calculates the number of cpu cores
+     * @return int: The number of cores
+     */
+    private function getCPUModel(int $index): string
+    {
+        $this->check();
+        return isset($this->cpu_info[$index]['model'])?$this->cpu_info[$index]['model']:'unknown';
     }
     
     protected function getCount(): Response
     {
         $response = new Response();
-        return $response->OK()->type('Integer')->unit(' ')->semantic('count')->value($this->getCPUCount());
+        return $response
+        ->OK()
+        ->update('late')
+        ->type('Integer')
+        ->unit(' ')
+        ->semantic('number')
+        ->value($this->getCPUCount());
     }
+    
+    protected function getVendor($index): Response
+    {
+        $result = new Response();
+        return $result
+        ->OK()
+        ->update('late')
+        ->type('String')
+        ->unit(' ')
+        ->semantic('name')
+        ->value($this->getCPUVendor($index));
+    }
+
+    protected function getModel($index): Response
+    {
+        $result = new Response();
+        return $result
+        ->OK()
+        ->update('late')
+        ->type('String')
+        ->unit(' ')
+        ->semantic('name')
+        ->value($this->getCPUModel($index));
+    }
+    
 }
