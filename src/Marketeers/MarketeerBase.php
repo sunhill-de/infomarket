@@ -60,9 +60,12 @@ abstract class MarketeerBase
         if (strpos($offer,'*')) {
             $search_parts = explode('.',$search);
             $offer_parts = explode('.',$offer);
+            if (count($search_parts) !== count($offer_parts)) {
+                return false;
+            }
             $i = 0;
             while ($i < count($search_parts)) {
-                if ($i>=count($offer_parts)) {
+                if ($i>count($offer_parts)) {
                     return false;
                 }
                 switch ($offer_parts[$i]) {

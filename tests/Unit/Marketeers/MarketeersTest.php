@@ -50,9 +50,11 @@ class MarketeersTest extends InfoMarketTestCase
             ['this.is.a.test','this.is.a.test',true],
             ['this.is.a.test','this.is.another,test',false],
             ['this.is.a.test','this.is.*.test',true],
+            ['this.is.a.test','this.is.*.testing',false],
             ['this.is.a.test','this.is.*#.test',false],
             ['this.is.a.test','this.is.*',false],
-            ['this.is.a.test','this.*.a.*',true],            
+            ['this.is.a.test','this.*.a.*',true],
+            ['this.is.a','this.is.*.test',false],
         ];
     }
     
