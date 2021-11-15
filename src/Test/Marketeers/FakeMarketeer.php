@@ -60,12 +60,14 @@ class FakeMarketeer extends MarketeerBase
     
     protected function getTestArray($index): Response
     {
-        
+        $response = new Response();
+        return $response->OK()->unit(' ')->type('Integer')->value(111*$index);        
     }
     
     protected function getAnotherArray($index1,$index2): Response
     {
-        
+        $response = new Response();
+        return $response->OK()->unit(' ')->type('Integer')->value($index1*$index2);        
     }
     
 }

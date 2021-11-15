@@ -11,8 +11,8 @@ class FakeMarketeer2 extends MarketeerBase
     protected function getOffering(): array
     {
         return [
-            'fake2.test'=>'getFake2Test'
-            
+            'fake2.test'=>'getFake2Test',
+            'test.array.nonsense'=>'getNonsenseTest'
         ];
     }
     
@@ -28,7 +28,14 @@ class FakeMarketeer2 extends MarketeerBase
     
     protected function getFake2Test(): Response
     {
-        
+        $response = new Response();
+        return $response->OK()->unit(' ')->type('String')->value('ABC');        
+    }
+    
+    protected function getNonsenseTest(): Response
+    {
+        $response = new Response();
+        return $response->OK()->unit(' ')->type('String')->value('NONSENSE');
     }
     
 }

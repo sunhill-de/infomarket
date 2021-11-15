@@ -77,6 +77,8 @@ class InfoMarket
               return $this->getAnswer($marketeer,$path,$credentials);
           }
       }
+      $response = new Response();
+      return $response->error("The item '$path' was not found.",'ITEMNOTFOUND')->get();
   }
 
   /**
