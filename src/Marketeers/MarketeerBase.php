@@ -57,35 +57,12 @@ abstract class MarketeerBase
 
     private function offerMatches(string $search,string $offer): bool
     {
-        if (strpos($offer,'*')) {
-            $search_parts = explode('.',$search);
-            $offer_parts = explode('.',$offer);
-            if (count($search_parts) !== count($offer_parts)) {
-                return false;
-            }
-            $i = 0;
-            while ($i < count($search_parts)) {
-                if ($i>count($offer_parts)) {
-                    return false;
-                }
-                switch ($offer_parts[$i]) {
-                    case '*':
-                        break;
-                    case '*#':
-                        if (!is_numeric($search_parts[$i])) {
-                            return false;
-                        }
-                        break;
-                    default:
-                        if ($search_parts[$i] != $offer_parts[$i]) {
-                            return false;
-                        }
-                }
-                $i++;
-            }
-            return true;
+        $result = $this->getVariableParameters($search, $offer);
+        
+        if (is_bool($result)) {
+            return $result;
         } else {
-            return ($offer == $search);
+            return true;
         }
     }
 
