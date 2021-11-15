@@ -245,4 +245,25 @@ class ResponseTest extends InfoMarketTestCase
         ];        
     }
     
+    public function testError()
+    {
+        $test = new Response();
+        $test->error('SOMEMESSAGE','SOMEERROR');
+            
+        $this->assertEquals('SOMEERROR',$this->getElement($test,'error_code'));
+        $this->assertEquals('SOMEMESSAGE',$this->getElement($test,'error_message'));
+        $this->assertEquals('FAILED',$this->getElement($test,'status'));        
+    }
+
+            
+    public function testErrorDefault()
+    {
+        $test = new Response();
+        $test->error('SOMEMESSAGE');
+            
+        $this->assertEquals('UNKNOWNERROR',$this->getElement($test,'error_code'));
+        $this->assertEquals('SOMEMESSAGE',$this->getElement($test,'error_message'));
+        $this->assertEquals('FAILED',$this->getElement($test,'status'));        
+    }
+
 }
