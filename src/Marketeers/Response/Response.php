@@ -98,6 +98,10 @@ class Response
         return $this;    
     }
     
+    public function error(string $message,string $code='UNKNOWNERROR'): Response
+    {
+        return $this->failed()->errorCode($code)->errorMessage($message);
+    
     /**
      * Sets the request string
      * @param string $request
@@ -344,7 +348,7 @@ class Response
     
     public function infoNotFound(): Response
     {
-       return $this->errorCode('INFONOTFOUND')->errorMessage('The information was not found.');
+        return $this->error('The information was not found.','INFONOTFOUND');
     }
     
     /**
