@@ -101,6 +101,7 @@ class Response
     public function error(string $message,string $code='UNKNOWNERROR'): Response
     {
         return $this->failed()->errorCode($code)->errorMessage($message);
+    }
     
     /**
      * Sets the request string
@@ -340,7 +341,7 @@ class Response
         return $this;
     }
     
-    public function errorMessage(string $message): Reponse
+    public function errorMessage(string $message): Response
     {
         $this->setElement('error_message',$this->translate($message));
         return $this;

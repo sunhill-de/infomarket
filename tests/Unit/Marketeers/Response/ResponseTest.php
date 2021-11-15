@@ -252,7 +252,7 @@ class ResponseTest extends InfoMarketTestCase
             
         $this->assertEquals('SOMEERROR',$this->getElement($test,'error_code'));
         $this->assertEquals('SOMEMESSAGE',$this->getElement($test,'error_message'));
-        $this->assertEquals('FAILED',$this->getElement($test,'status'));        
+        $this->assertEquals('FAILED',$this->getElement($test,'result'));        
     }
 
             
@@ -263,7 +263,7 @@ class ResponseTest extends InfoMarketTestCase
             
         $this->assertEquals('UNKNOWNERROR',$this->getElement($test,'error_code'));
         $this->assertEquals('SOMEMESSAGE',$this->getElement($test,'error_message'));
-        $this->assertEquals('FAILED',$this->getElement($test,'status'));        
+        $this->assertEquals('FAILED',$this->getElement($test,'result'));        
     }
 
 }
