@@ -64,7 +64,18 @@ class InfoMarket
    */
   public function readItemList(string $list, $credentials = null): string
   {
+      $info = json_descode($list,true); 
+    
+      if (json_last_error() !== JSON_ERROR_NONE) {
+          throw new MarketException('Malformed json request for readItemList.');      
+      }
       
+      $result = ['result'=>[]];
+    
+      foreach ($info['query'] as $query) {
+         $result['result'][] = json_decode($this->readSingleItem($query,$credentials));
+      }
+      return json_encode($result);
   }
   
   protected function readSingleItem(string $path, $credentials): string
