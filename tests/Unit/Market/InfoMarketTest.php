@@ -139,4 +139,31 @@ class InfoMarketTest extends InfoMarketTestCase
         $this->assertEquals('test.item',$result['request']);
     }
     
+    public function testReadItemList()
+    {
+        $test1 = $this->getMockBuilder(FakeMarketeer::class)->setMethods(['getItem'])->getMock();
+        $test2 = $this->getMockBuilder(FakeMarketeer::class)->setMethods(['getItem'])->getMock();
+        
+        $result1 = new Response();
+        $result1->OK()->type('Integer')->unit(' ')->value('123');
+        $result2 = new Response();
+        $result2->OK()->type('Integer')->unit(' ')->value('234');
+        $result3 = new Response();
+        $result3->OK()->type('Integer')->unit(' ')->value('345');
+
+        $test1->expects($this->any())->method('getItem')->with('test.item')->willReturn($result1);
+        $test1->expects($this->any())->method('getItem')->with('test.item2')->willReturn($result2);
+        $test2->expects($this->any())->method('getItem')->with('test.item3')->willReturn($result3);
+        
+        $market = new InfoMarket();
+        $market->installMarketeer($test1);
+        $market->installMarketeer($test2);
+        
+        $query = '{ 'query':['test.item','test.item3'] }';
+        $result = json_decode($market->readItemList($query),true);
+        
+        $this->assertEquals(123,$result['result'][0]['value']);
+        $this->assertEquals(345,$result['result'][2]['value']);
+    }
+    
 }
