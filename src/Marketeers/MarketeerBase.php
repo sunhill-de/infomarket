@@ -133,12 +133,12 @@ abstract class MarketeerBase
      * @param $name string: The item to search for
      * @returns false|string see above
      */
-    protected function getItemMethod(string $name)
+    protected function getItemMethod(string $name,&$variables=null)
     {
         $this->checkAllowedChars($name);
 
         foreach ($this->getOffer() as $offer=>$callback) {
-            if ($this->offerMatches($name,$offer)) {
+            if ($this->offerMatches($name,$offer,$variables)) {
                 return $callback;
             }
         }
@@ -170,7 +170,13 @@ abstract class MarketeerBase
      */
     protected function getItemRestrictions(string $name): array
     {
-        $method = $this->
+        $variables = [];
+        $method = $this->getItemMethod($name,$variables).'_restrictions';
+        if (method_exists($this,$method)) {
+            return $this->$method($variables);
+        } else {
+            return $this->getDefaultRestrictions();
+        }
     }
     
     protected function getDefaultRestrictions(): array
