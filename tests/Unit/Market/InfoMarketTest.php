@@ -159,7 +159,7 @@ class InfoMarketTest extends InfoMarketTestCase
         $market->installMarketeer($test1);
         $market->installMarketeer($test2);
         
-        $query = "{ 'query':['test.item','test.item3'] }";
+        $query = '{ "query":["test.item","test.item3"] }';
         $result = json_decode($market->readItemList($query),true);
         
         $this->assertEquals(123,$result['result'][0]['value']);

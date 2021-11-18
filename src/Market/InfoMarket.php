@@ -64,7 +64,7 @@ class InfoMarket
    */
   public function readItemList(string $list, $credentials = null): string
   {
-      $info = json_descode($list,true); 
+      $info = json_decode($list,true); 
     
       if (json_last_error() !== JSON_ERROR_NONE) {
           throw new MarketException('Malformed json request for readItemList.');      

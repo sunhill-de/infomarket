@@ -45,25 +45,15 @@ class System extends MarketeerBase
     protected function getOffering(): array
     {
         return [
-          'system.uptime.seconds'=>'getUptimeSeconds',
-          'system.uptime.duration'=>'getUptimeDuration',
-          'system.idletime.seconds'=>'getIdletimeSeconds',
-          'system.idletime.duration'=>'getIdletimeDuration',
-          'system.average_idletime.seconds'=>'getAverageIdletimeSeconds',
-          'system.average_idletime.duration'=>'getAverageIdletimeDuration'
+          'system.uptime.seconds'=>'UptimeSeconds',
+          'system.uptime.duration'=>'UptimeDuration',
+          'system.idletime.seconds'=>'IdletimeSeconds',
+          'system.idletime.duration'=>'IdletimeDuration',
+          'system.average_idletime.seconds'=>'AverageIdletimeSeconds',
+          'system.average_idletime.duration'=>'AverageIdletimeDuration'
         ];
     }
        
-    protected function itemIsReadable(string $item): bool
-    {
-        return true;
-    }
-    
-    protected function itemIsWriteable(string $item): bool
-    {
-        return false;
-    }
-    
     private function stripData() 
     {
         $data = str_replace("\n","",$this->getData());

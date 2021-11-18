@@ -118,36 +118,26 @@ class Disk extends MarketeerBase
     protected function getOffering(): array
     {
         return [
-            'disk.count'=>'getDiskCount',
-            'disk.*.capacity'=>'getDiskCapacity',
-            'disk.*.name'=>'getDiskName',
-            'disk.*.vendor'=>'getDiskVendor',
+            'disk.count'=>'DiskCount',
+            'disk.#.capacity'=>'DiskCapacity',
+            'disk.#.name'=>'DiskName',
+            'disk.#.vendor'=>'DiskVendor',
             
-            'partitions.count'=>'getPartititionCount',
-            'partitions.*.name'=>'getPartititionName',
-            'partitions.*.capacity'=>'getPartitionCapacity',
-            'partitions.*.used.bytes'=>'getPartititionUsedBytes',
-            'partitions.*.used.capacity'=>'getPartititionUsedCapacity',
-            'partitions.*.used.percent'=>'getPartititionUsedPercent',
-            'partitions.*.free.bytes'=>'getPartititionFreeBytes',
-            'partitions.*.free.capacity'=>'getPartititionFreeCapacity',
-            'partitions.*.free.percent'=>'getPartititionFreePercent',
+            'partitions.count'=>'PartititionCount',
+            'partitions.#.name'=>'PartititionName',
+            'partitions.#.capacity'=>'PartitionCapacity',
+            'partitions.#.used.bytes'=>'PartititionUsedBytes',
+            'partitions.#.used.capacity'=>'PartititionUsedCapacity',
+            'partitions.#.used.percent'=>'PartititionUsedPercent',
+            'partitions.#.free.bytes'=>'PartititionFreeBytes',
+            'partitions.#.free.capacity'=>'PartititionFreeCapacity',
+            'partitions.#.free.percent'=>'PartititionFreePercent',
             
-            'raid.count'=>'getRaidCount',
-            'raid.*.name'=>'getRaidName',
+            'raid.count'=>'RaidCount',
+            'raid.#.name'=>'RaidName',
         ];
     }
        
-    protected function itemIsReadable(string $item): bool
-    {
-        return true;
-    }
-    
-    protected function itemIsWriteable(string $item): bool
-    {
-        return false;
-    }
-
     private function getAnythingByIndex($list,int $index) 
     {
         $i = 0;

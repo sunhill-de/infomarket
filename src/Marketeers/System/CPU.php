@@ -30,24 +30,14 @@ class CPU extends MarketeerBase
     protected function getOffering(): array
     {
         return [
-            'system.cpu.count'=>'getCount',
-            'system.cpu.*.vendor'=>'getVendor',
-            'system.cpu.*.model'=>'getModel',
-            'system.cpu.*.bogomips'=>'getBogomips',
-            'system.cpu.temp'=>'getTemp',            
+            'system.cpu.count'=>'Count',
+            'system.cpu.#.vendor'=>'Vendor',
+            'system.cpu.#.model'=>'Model',
+            'system.cpu.#.bogomips'=>'Bogomips',
+            'system.cpu.temp'=>'Temp',            
         ];
     }
        
-    protected function itemIsReadable(string $item): bool
-    {
-        return true;
-    }
-    
-    protected function itemIsWriteable(string $item): bool
-    {
-        return false;
-    }
-
     protected function getProcCpuinfo(): string
     {
         return file_get_contents('/proc/cpuinfo');

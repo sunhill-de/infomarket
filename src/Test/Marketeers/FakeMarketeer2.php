@@ -11,8 +11,8 @@ class FakeMarketeer2 extends MarketeerBase
     protected function getOffering(): array
     {
         return [
-            'fake2.test'=>'getFake2Test',
-            'test.array.nonsense'=>'getNonsenseTest'
+            'fake2.test'=>'Fake2Test',
+            'test.array.nonsense'=>'NonsenseTest'
         ];
     }
     

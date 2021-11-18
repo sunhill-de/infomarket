@@ -248,6 +248,13 @@ abstract class MarketeerBase
         }        
     }
     
+    /**
+     * Checks if the given user is on the same or higer level as the given restriction
+     * @param unknown $user
+     * @param unknown $restriction
+     * @throws MarketeerException
+     * @return bool
+     */
     protected function isAccessible($user,$restriction): bool
     {
         switch ($restriction) {
@@ -263,7 +270,13 @@ abstract class MarketeerBase
                 throw new MarketeerException("Unkown user group '$restriction'");
         }
     }
-    
+
+    /**
+     * Checks if the item exists, is accessible and readable. If yes the item is returned
+     * @param string $name
+     * @param string $user
+     * @return boolean|\Sunhill\InfoMarket\Marketeers\Response\Response false if not found otherwise response
+     */
     public function getItem(string $name,$user = 'anybody')
     {
         $variables = [];
