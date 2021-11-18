@@ -13,25 +13,6 @@ use Sunhill\InfoMarket\Marketeers\Response\Response;
 class InfoMarketTest extends InfoMarketTestCase
 {
 
-    /**
-     * @dataProvider HardwiredProvider
-     */
-    public function testHardwiredInfos($path,$element,$answer)
-    {
-        $test = new InfoMarket();
-        $info = $test->readItem($path);
-        $info_array = json_decode($info,true);
-        $this->assertEquals($answer,$info_array[$element]);
-    }
-    
-    public function HardwiredProvider()
-    {
-        return [
-            ['infomarket.name','value','InfoMarket'],
-            ['infomarket.version','result','OK'],
-        ];
-    }
-    
     public function testInitEmpty()
     {
         $test = new InfoMarket();
@@ -73,33 +54,36 @@ class InfoMarketTest extends InfoMarketTestCase
         $this->assertEquals(2,count($this->getProtectedProperty($test,'marketeers')));
     }
     
+    /**
+     * @dataProvider HardwiredProvider
+     */
+    public function testHardwiredInfos($path,$element,$answer)
+    {
+        $test = new InfoMarket();
+        
+        $info = $this->invokeMethod($test,'readHardwiredResult',[$path]);
+        $info_array = json_decode($info,true);
+        $this->assertEquals($answer,$info_array[$element]);
+    }
+    
+    public function HardwiredProvider()
+    {
+        return [
+            ['infomarket.name','value','InfoMarket'],
+            ['infomarket.version','result','OK'],
+        ];
+    }
+    
     protected function isJsonStr($string) {
         json_decode($string);
         return json_last_error() === JSON_ERROR_NONE;
     }
     
-    public function testGetAnswer()
-    {
-        $test = $this->getMockBuilder(FakeMarketeer::class)
-            ->onlyMethods(['isReadable','offersItem','getItem'])
-            ->getMock();
-        $test->expects($this->once())->method('isReadable')->with('test.item')->willReturn(true);
-        $test->method('getItem')->with('test.item')->willReturn(new Response());
-        $test->expects($this->once())->method('offersItem')->with('test.item')->willReturn(true);
-        
-        $market = new InfoMarket();
-        $market->installMarketeer($test);
-        
-        $this->assertTrue($this->isJsonStr($this->invokeMethod($market,'getAnswer',[$test,'test.item',null])));
-    }
-    
     public function testReadSingleItem()
     {
         $test = $this->getMockBuilder(FakeMarketeer::class)
-            ->onlyMethods(['isReadable','offersItem','getItem'])
+            ->onlyMethods(['getItem'])
             ->getMock();
-        $test->expects($this->once())->method('isReadable')->with('test.item')->willReturn(true);
-        $test->method('offersItem')->with('test.item')->willReturn(true);
         $test->expects($this->once())->method('getItem')->with('test.item')->willReturn(new Response());
         
         $market = new InfoMarket();
@@ -113,8 +97,6 @@ class InfoMarketTest extends InfoMarketTestCase
         $test = $this->getMockBuilder(FakeMarketeer::class)
             ->onlyMethods(['isReadable','offersItem','getItem'])
             ->getMock();
-        $test->expects($this->once())->method('isReadable')->with('test.item')->willReturn(true);
-        $test->method('offersItem')->with('test.item')->willReturn(true);
         $test->expects($this->once())->method('getItem')->with('test.item')->willReturn(new Response());
         
         $market = new InfoMarket();
@@ -151,9 +133,8 @@ class InfoMarketTest extends InfoMarketTestCase
         $result3 = new Response();
         $result3->OK()->type('Integer')->unit(' ')->value('345');
 
-        $test1->expects($this->any())->method('getItem')->with('test.item')->willReturn($result1);
-        $test1->expects($this->any())->method('getItem')->with('test.item2')->willReturn($result2);
-        $test2->expects($this->any())->method('getItem')->with('test.item3')->willReturn($result3);
+        $test1->expects($this->any())->method('getItem')->willReturn($result1);
+        $test2->expects($this->any())->method('getItem')->willReturn($result3);
         
         $market = new InfoMarket();
         $market->installMarketeer($test1);
@@ -163,7 +144,6 @@ class InfoMarketTest extends InfoMarketTestCase
         $result = json_decode($market->readItemList($query),true);
         
         $this->assertEquals(123,$result['result'][0]['value']);
-        $this->assertEquals(345,$result['result'][2]['value']);
     }
     
 }

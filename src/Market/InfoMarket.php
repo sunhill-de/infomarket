@@ -84,14 +84,20 @@ class InfoMarket
         return $result;
       }
       foreach ($this->marketeers as $marketeer) {
-          if ($marketeer->offersItem($path)) {
-              return $this->getAnswer($marketeer,$path,$credentials);
+          if ($result = $marketeer->getItem($path)) {
+              $this->fixResponse($result, $path);   
+              return $result->get();
           }
       }
       $response = new Response();
       return $response->error("The item '$path' was not found.",'ITEMNOTFOUND')->get();
   }
 
+  protected function fixResponse(Response &$response, string $path)
+  {
+        $response->request($path);    
+  }
+  
   /**
    * Hardwired informations are informations that are not routet through a marketeer but answered directly. Mostly for testing purposes
    * @param $path string: The requested path
@@ -106,21 +112,6 @@ class InfoMarket
           return (new Response())->OK()->request($path)->type('String')->unit(' ')->value(CURRENT_VERSION)->get();
     }
     return false;
-  }
-  
-  protected function getAnswer($marketeer, string $path, $credentials): string 
-  {
-      if (!$marketeer->isReadable($path)) {
-          $response = new Respose();
-          return $response->failed()->errorCode('NOTREADABLE')->errorMessage('The item is not readable')->get();
-      }
-      $restrictions = $marketeer->getRestrictions($path);
-      if (($restrictions['read'] !== 'anybody') && ($this->checkRestriction($restriction['read'],$credentials))) {
-          $response = new Respose();
-          return $response->failed()->errorCode('NOTALLOWED')->errorMessage('You are not allowed to read this item')->get();          
-      }
-      $response = $marketeer->getItem($path)->request($path);
-      return $response->get();
   }
   
 }
