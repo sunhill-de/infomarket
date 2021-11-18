@@ -11,58 +11,115 @@ use Sunhill\InfoMarket\Test\Marketeers\FakeMarketeer;
 class MarketeersTest extends InfoMarketTestCase
 {
 
-    /**
-     * @dataProvider CalculateGetterNameProvider
-     * @param unknown $test
-     * @param unknown $expect
-     */
-    public function testCalculateGetterName($test_name,$expect)
+    public function testCheckAllowedCharPass()
     {
         $test = new FakeMarketeer();
-        $this->assertEquals($expect,$this->invokeMethod($test,'calculateGetterName',[$test_name]));
-    }
+        $this->invokeMethod($test,'checkAllowedChar',['this.is.a.test']);
+        $this->assertTrue(true);
+    }    
     
-    public function CalculateGetterNameProvider()
+    public function testCheckAllowedCharFail()
     {
-        return [
-            ['test.this','getTestThis'],
-            ['test.this.too','getTestThisToo'],
-            ['test.a_seperated','getTestASeperated'],
-            ['test.another_seperated.one','getTestAnotherSeperatedOne']
-        ];
-    }
-
+        $this->expectException(MarketeerException::class);
+        $test = new FakeMarketeer();
+        $this->invokeMethod($test,'checkAllowedChar',['this.is.*.test']);
+    }    
+    
     /**
      * @dataProvider OfferMatchesProvider
      * @param unknown $test
      * @param unknown $offer
      * @param unknown $expect
      */
-    public function testOfferMatches($test,$offer,$expect)
+    public function testOfferMatches($test,$offer,$variables,$expect)
     {
         $test_obj = new FakeMarketeer();
-        $this->assertEquals($expect,$this->invokeMethod($test_obj, 'offerMatches',[$test,$offer]));
+        if (is_null($variables)) {
+            $result = $this->invokeMethod($test_obj, 'offerMatches',[$test,$offer]);
+        } else {
+            $values = [];
+            $result = $this->invokeMethod($test_obj, 'offerMatches',[$test,$offer,&$values]);
+        }
+        $this->assertEquals($expect,$result);
+        if (!is_null($variables)) {
+            $this->assertEquals($variables,$values);
+        }    
     }
     
     public function OfferMatchesProvider()
     {
         return [
-            ['this.is.a.test','this.is.a.test',true],
-            ['this.is.a.test','this.is.another,test',false],
-            ['this.is.a.test','this.is.*.test',true],
-            ['this.is.a.test','this.is.*.testing',false],
-            ['this.is.a.test','this.is.*#.test',false],
-            ['this.is.a.test','this.is.*',false],
-            ['this.is.a.test','this.*.a.*',true],
-            ['this.is.a','this.is.*.test',false],
+            ['this.is.a.test','this.is.a.test',null,true],
+            ['this.is.a.test','this.is.a.test',[],true],            
+            ['this.is.a.test','this.is.another,test',null,false],
+            ['this.is.a.test','this.is.a',null,false],
+            ['this.is.a','this.is.a.test',null,false],
+            ['this.is.a.test','this.is.?.test',null,true],
+            ['this.is.a.test','this.is.?.test',['a'],null,true],            
+            ['this.is.a.test','this.is.?.testing',null,false],
+            ['this.is.a.test','this.is.?.testing',[],false],            
+            ['this.is.a.test','this.is.#.test',null,false],
+            ['this.is.a.test','this.is.#.test',[],false],
+            ['this.is.1.test','this.is.#.test',null,true],
+            ['this.is.1.test','this.is.#.test',[],true],
+            ['this.is.a.test','this.is.?',null,false],
+            ['this.is.a.test','this.?.a.?',null,true],
+            ['this.is.a.test','this.?.a.?',['is','test'],true],
+            ['this.is.a','this.is.?.test',null,false],
+            ['this.is.a.test','this.is.*',['a.test'],true]
         ];
     }
     
-    public function testUnknownItem()
+    public function testOffersItem($test,$expect)
+    {
+        $test_obj = new FakeMarketeer();
+        $this->assertEquals($expect,$test_obj->offersItem($test));
+    }
+
+    public function OffersItemProvider()
+    {
+        return  [
+            ['test.item',true],
+            ['test.item.more',false],
+            ['test.array.some.item',true],
+            ['test.array.some.other.item',false],
+            ['another.boring.array.test',true],
+            ['catchall.test.too',true],
+            ['catchall',false],
+            ['numeric.1.test',true],
+            ['numeric.a.test',false]
+        ];    
+    }
+
+    public function testGetItemMethodPass()
+    {
+        $test = new FakeMarketeer();
+        $this->assertEquals('getTestItem',$this->invokeMethod($test,'getItemMethod',['test.item']));
+    }
+    
+    public function testGetItemMethodFail()
+    {
+        $test = new FakeMarketeer();
+        $this->assertFalse($this->invokeMethod($test,'getItemMethod',['non.existing.item']));
+    }
+    
+    public function testGetRestrictionsPass()
+    {
+        $test = $this->getMockBuilder(FakeMarketeer::class)
+        ->setMethods(['getTestItem'])
+        ->getMock();
+        $test->expects($this->once())->method('getTestItem')->willReturn(['test']);
+        
+        $this->assertEquals([],$test->getRestrictions('test.item'));
+    }
+    
+    public function testGetRestrictionsFail()
     {
         $this->expectException(MarketeerException::class);
+        
         $test = new FakeMarketeer();
-        $test->getItem('nonexisting.item');
+        
+        $test->getRestrictions('test.item');
     }
     
     public function testSimpleItem()
