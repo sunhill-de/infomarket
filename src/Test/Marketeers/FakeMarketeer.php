@@ -11,40 +11,29 @@ class FakeMarketeer extends MarketeerBase
     {
         return [
             'test.item'=>'getTestItem',
+            'restricted.item'=>'getRestrictedItem',
             'readonly.test'=>'getReadonlyTest',
             'writeonly.test'=>'getWriteonlyTest',
-            'test.array.*.item'=>'getTestArray',
-            'another.*.array.*'=>'getAnotherArray'
+            'test.array.?.item'=>'getTestArray',
+            'another.?.array.?'=>'getAnotherArray',
+            'catchall.*'=>'getCatchAll',
+            'numeric.#.test'=>'getNumericTest'
         ];
     }
-    
-    protected function itemIsReadable(string $name): bool
+
+    protected function getRestrictedItem_restrictions()
     {
-        switch ($name) {
-            case 'writeonly.test':
-                return false;
-            default:
-                return true;
-        }
+        return ['read'=>'Admin','write'=>'Admin'];
     }
     
-    protected function itemIsWriteable(string $name): bool
+    protected function getReadonlyTest_writeable()
     {
-        switch ($name) {
-            case 'readonly.test':
-                return false;
-            default:
-                return true;
-        }
+        return false;
     }
     
-    protected function getItemResponse(string $name): Response
+    protected function getWriteonlyTest_readable()
     {
-        if ($name == 'test.catchall') {
-            return $this->getCatchall();
-        } else {
-            return parent::getItemResponse($name);
-        }
+        return false;
     }
     
     protected function getTestItem(): Response
@@ -53,7 +42,7 @@ class FakeMarketeer extends MarketeerBase
         return $response->OK()->unit(' ')->type('Integer')->value(123);
     }
     
-    protected function getTestCatchall(): Response
+    protected function getCatchall(): Response
     {
         
     }
