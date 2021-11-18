@@ -14,7 +14,7 @@ class MarketeersTest extends InfoMarketTestCase
     public function testCheckAllowedCharPass()
     {
         $test = new FakeMarketeer();
-        $this->invokeMethod($test,'checkAllowedChar',['this.is.a.test']);
+        $this->invokeMethod($test,'checkAllowedChars',['this.is.a.test']);
         $this->assertTrue(true);
     }    
     
@@ -22,7 +22,7 @@ class MarketeersTest extends InfoMarketTestCase
     {
         $this->expectException(MarketeerException::class);
         $test = new FakeMarketeer();
-        $this->invokeMethod($test,'checkAllowedChar',['this.is.*.test']);
+        $this->invokeMethod($test,'checkAllowedChars',['this.is.*.test']);
     }    
     
     /**
@@ -55,13 +55,13 @@ class MarketeersTest extends InfoMarketTestCase
             ['this.is.a.test','this.is.a',null,false],
             ['this.is.a','this.is.a.test',null,false],
             ['this.is.a.test','this.is.?.test',null,true],
-            ['this.is.a.test','this.is.?.test',['a'],null,true],            
+            ['this.is.a.test','this.is.?.test',['a'],true],            
             ['this.is.a.test','this.is.?.testing',null,false],
             ['this.is.a.test','this.is.?.testing',[],false],            
             ['this.is.a.test','this.is.#.test',null,false],
             ['this.is.a.test','this.is.#.test',[],false],
             ['this.is.1.test','this.is.#.test',null,true],
-            ['this.is.1.test','this.is.#.test',[],true],
+            ['this.is.1.test','this.is.#.test',[1],true],
             ['this.is.a.test','this.is.?',null,false],
             ['this.is.a.test','this.?.a.?',null,true],
             ['this.is.a.test','this.?.a.?',['is','test'],true],
@@ -70,6 +70,11 @@ class MarketeersTest extends InfoMarketTestCase
         ];
     }
     
+    /**
+     * @dataProvider OffersItemProvider
+     * @param unknown $test
+     * @param unknown $expect
+     */
     public function testOffersItem($test,$expect)
     {
         $test_obj = new FakeMarketeer();
@@ -91,26 +96,38 @@ class MarketeersTest extends InfoMarketTestCase
         ];    
     }
 
-    public function testGetItemMethodPass()
+    /**
+     * @dataProvider GetItemMethodProvider
+     * @param unknown $item
+     * @param unknown $prefix
+     * @param unknown $postfix
+     * @param unknown $expect
+     */
+    public function testGetItemMethod($item,$prefix,$postfix,$expect)
     {
         $test = new FakeMarketeer();
-        $this->assertEquals('getTestItem',$this->invokeMethod($test,'getItemMethod',['test.item']));
+        
+        $this->assertEquals($expect, $this->invokeMethod($test,'getItemMethod',[$item,$prefix,$postfix]));
     }
     
-    public function testGetItemMethodFail()
+    public function GetItemMethodProvider()
     {
-        $test = new FakeMarketeer();
-        $this->assertFalse($this->invokeMethod($test,'getItemMethod',['non.existing.item']));
+        return [
+            ['test.item','','','TestItem'],
+            ['test.item','get','','getTestItem'],
+            ['test.item','','_writeable','TestItem_writeable'],
+            ['nonexisting.item','','',false],
+        ];    
     }
     
     public function testGetRestrictionsPass()
     {
         $test = $this->getMockBuilder(FakeMarketeer::class)
-        ->setMethods(['getRestrictedItem'])
+        ->onlyMethods(['RestrictedItem_restrictions'])
         ->getMock();
-        $test->expects($this->once())->method('getRestrictedItem_restrictions')->willReturn(['test']);
+        $test->expects($this->once())->method('RestrictedItem_restrictions')->willReturn(['test']);
         
-        $this->assertEquals([],$test->getRestrictions('restricted.item'));
+        $this->assertEquals(['test'],$test->getRestrictions('restricted.item'));
     }
     
     public function testGetRestrictionsFail()
@@ -122,31 +139,101 @@ class MarketeersTest extends InfoMarketTestCase
         $test->getRestrictions('nonexisting.item');
     }
     
-    public function testSimpleItem()
-    {        
-        $test = $this->getMockBuilder(FakeMarketeer::class)
-        ->setMethods(['getTestItem'])
-        ->getMock();
-        $test->expects($this->once())->method('getTestItem');
-        $test->getItem('test.item');
+    public function testGetReadableDefault()
+    {
+        $test = new FakeMarketeer();
+        
+        $this->assertTrue($test->isReadable('test.item'));
     }
-    
-    public function testWithParameter()
+ 
+    public function testGetReadableWriteOnly()
     {
         $test = $this->getMockBuilder(FakeMarketeer::class)
-        ->setMethods(['getTestArray'])
+        ->onlyMethods(['WriteOnlyTest_readable'])
         ->getMock();
-        $test->expects($this->once())->method('getTestArray')->with('test');
-        $test->getItem('test.array.test.item');        
+        $test->expects($this->once())->method('WriteonlyTest_readable')->willReturn(false);
+        
+        $this->assertFalse($test->isReadable('writeonly.test'));        
+    }
+
+    public function testGetWriteableDefault()
+    {
+        $test = new FakeMarketeer();
+        
+        $this->assertFalse($test->isWriteable('test.item'));
     }
     
-    public function testWithMoreParameter()
+    public function testGetWriteableWriteable()
     {
         $test = $this->getMockBuilder(FakeMarketeer::class)
-        ->setMethods(['getAnotherArray'])
+        ->onlyMethods(['WriteableTest_writeable'])
         ->getMock();
-        $test->expects($this->once())->method('getAnotherArray')->with('test','item');
-        $test->getItem('another.test.array.item');
+        $test->expects($this->once())->method('WriteableTest_writeable')->willReturn(true);
+        
+        $this->assertTrue($test->isWriteable('writeable.test'));
     }
     
+    /**
+     * @dataProvider IsAccessibleProvider
+     */
+    public function testIsAccessible($user,$restriction,$expect)
+    {
+        $test = new FakeMarketeer();
+        
+        $this->assertEquals($expect,$this->invokeMethod($test,'isAccessible',[$user,$restriction]));
+    }
+    
+    public function IsAccessibleProvider()
+    {
+        return [
+            ['anybody','anybody',true],
+            ['anybody','user',false],
+            ['anybody','advanced',false],
+            ['anybody','admin',false],
+        
+            ['user','anybody',true],
+            ['user','user',true],
+            ['user','advanced',false],
+            ['user','admin',false],
+
+            ['advanced','anybody',true],
+            ['advanced','user',true],
+            ['advanced','advanced',true],
+            ['advanced','admin',false],
+            
+            ['admin','anybody',true],
+            ['admin','user',true],
+            ['admin','advanced',true],
+            ['admin','admin',true],
+            
+        ];    
+    }
+    
+    /**
+     * @dataProvider GetItemProvider
+     * @param unknown $item
+     * @param unknown $key
+     * @param unknown $value
+     */
+    public function testGetItem($item,$key,$value)
+    {
+        $test = new FakeMarketeer();
+        $result = $test->getItem($item);        
+        if ($key == false) {
+            $this->assertFalse($result);
+        } else {
+            $this->assertEquals($value,$result->getElement($key));
+        }
+    }
+    
+    public function GetItemProvider()
+    {
+        return [
+            ['test.item','value',123],
+            ['nonexisting.item',false,null],
+            ['test.array.2.item','value',222],
+            ['restricted.item','error_code','ITEMNOTACCESSIBLE'],
+            ['writeonly.test','error_code','ITEMNOTREADABLE'],
+        ];        
+    }
 }

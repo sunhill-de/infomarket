@@ -32,7 +32,7 @@ class CPUTest extends InfoMarketTestCase
     private function getMockedMarketeer(int $index)
     {
         $test = $this->getMockBuilder(CPU::class)
-            ->setMethods(['getProcCpuinfo','getThermalDir'])    
+            ->onlyMethods(['getProcCpuinfo','getThermalDir'])    
             ->getMock();
         $test->method('getProcCpuinfo')->willReturn(file_get_contents(dirname(__FILE__).'/../../../Files/proc/cpuinfo'.$index));
         $test->method('getThermalDir')->willReturn(dirname(__FILE__).'/../../../Files/sys/thermal'.$index);

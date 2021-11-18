@@ -81,7 +81,7 @@ class InfoMarketTest extends InfoMarketTestCase
     public function testGetAnswer()
     {
         $test = $this->getMockBuilder(FakeMarketeer::class)
-            ->setMethods(['isReadable','offersItem','getItem'])
+            ->onlyMethods(['isReadable','offersItem','getItem'])
             ->getMock();
         $test->expects($this->once())->method('isReadable')->with('test.item')->willReturn(true);
         $test->method('getItem')->with('test.item')->willReturn(new Response());
@@ -96,7 +96,7 @@ class InfoMarketTest extends InfoMarketTestCase
     public function testReadSingleItem()
     {
         $test = $this->getMockBuilder(FakeMarketeer::class)
-            ->setMethods(['isReadable','offersItem','getItem'])
+            ->onlyMethods(['isReadable','offersItem','getItem'])
             ->getMock();
         $test->expects($this->once())->method('isReadable')->with('test.item')->willReturn(true);
         $test->method('offersItem')->with('test.item')->willReturn(true);
@@ -111,7 +111,7 @@ class InfoMarketTest extends InfoMarketTestCase
     public function testReadItem()
     {
         $test = $this->getMockBuilder(FakeMarketeer::class)
-            ->setMethods(['isReadable','offersItem','getItem'])
+            ->onlyMethods(['isReadable','offersItem','getItem'])
             ->getMock();
         $test->expects($this->once())->method('isReadable')->with('test.item')->willReturn(true);
         $test->method('offersItem')->with('test.item')->willReturn(true);
@@ -126,7 +126,7 @@ class InfoMarketTest extends InfoMarketTestCase
     public function testAppendRequest()
     {
         $test = $this->getMockBuilder(FakeMarketeer::class)
-        ->setMethods(['getItem'])
+        ->onlyMethods(['getItem'])
         ->getMock();
         $result = new Response();
         $result = $result->OK()->type('Integer')->unit(' ')->value('123');
@@ -141,8 +141,8 @@ class InfoMarketTest extends InfoMarketTestCase
     
     public function testReadItemList()
     {
-        $test1 = $this->getMockBuilder(FakeMarketeer::class)->setMethods(['getItem'])->getMock();
-        $test2 = $this->getMockBuilder(FakeMarketeer::class)->setMethods(['getItem'])->getMock();
+        $test1 = $this->getMockBuilder(FakeMarketeer::class)->onlyMethods(['getItem'])->getMock();
+        $test2 = $this->getMockBuilder(FakeMarketeer::class)->onlyMethods(['getItem'])->getMock();
         
         $result1 = new Response();
         $result1->OK()->type('Integer')->unit(' ')->value('123');
@@ -159,7 +159,7 @@ class InfoMarketTest extends InfoMarketTestCase
         $market->installMarketeer($test1);
         $market->installMarketeer($test2);
         
-        $query = '{ 'query':['test.item','test.item3'] }';
+        $query = "{ 'query':['test.item','test.item3'] }";
         $result = json_decode($market->readItemList($query),true);
         
         $this->assertEquals(123,$result['result'][0]['value']);

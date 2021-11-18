@@ -11,7 +11,7 @@ class DiskTest extends InfoMarketTestCase
     protected function getMockedDisk($index)
     {
         $test = $this->getMockBuilder(Disk::class)
-        ->setMethods(['getLsBlk','getDF'])
+        ->onlyMethods(['getLsBlk','getDF'])
         ->getMock();
         $test->method('getLsBlk')->willReturn(file_get_contents(dirname(__FILE__).'/../../../Files/lsblk/lsblk'.$index));
         $test->method('getDF')->willReturn(file_get_contents(dirname(__FILE__).'/../../../Files/df/df'.$index));

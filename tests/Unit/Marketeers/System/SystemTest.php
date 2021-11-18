@@ -42,7 +42,7 @@ class SystemTest extends InfoMarketTestCase
     public function testGetUptimeSeconds()
     {
         $test = $this->getMockBuilder(System::class)
-            ->setMethods(['getData'])    
+            ->onlyMethods(['getData'])    
             ->getMock();
         $test->method('getData')->willReturn("1131440.44 4488358.31\n");
         $response = $test->getItem('system.uptime.seconds');
@@ -52,7 +52,7 @@ class SystemTest extends InfoMarketTestCase
     public function testGetUptimeDuration()
     {
         $test = $this->getMockBuilder(System::class)
-        ->setMethods(['getData'])
+        ->onlyMethods(['getData'])
         ->getMock();
         $test->method('getData')->willReturn("1131440.44 4488358.31\n");
         $response = $test->getItem('system.uptime.duration');
@@ -62,7 +62,7 @@ class SystemTest extends InfoMarketTestCase
     public function testGetIdletimeSeconds()
     {
         $test = $this->getMockBuilder(System::class)
-        ->setMethods(['getData'])
+        ->onlyMethods(['getData'])
         ->getMock();
         $test->method('getData')->willReturn("1131440.44 4488358.31\n");
         $response = $test->getItem('system.idletime.seconds');
@@ -72,7 +72,7 @@ class SystemTest extends InfoMarketTestCase
     public function testGetIdletimeDuration()
     {
         $test = $this->getMockBuilder(System::class)
-        ->setMethods(['getData'])
+        ->onlyMethods(['getData'])
         ->getMock();
         $test->method('getData')->willReturn("1131440.44 4488358.31\n");
         $response = $test->getItem('system.idletime.duration');
@@ -82,7 +82,7 @@ class SystemTest extends InfoMarketTestCase
     public function testGetAverageIdletimeSeconds()
     {
         $test = $this->getMockBuilder(System::class)
-        ->setMethods(['getData','getCPUCount'])
+        ->onlyMethods(['getData','getCPUCount'])
         ->getMock();
         $test->method('getData')->willReturn("1131440.44 4488358.31\n");
         $test->method('getCPUCount')->willReturn(4);
@@ -93,7 +93,7 @@ class SystemTest extends InfoMarketTestCase
     public function testGetAverageIdletimeDuration()
     {
         $test = $this->getMockBuilder(System::class)
-        ->setMethods(['getData'])
+        ->onlyMethods(['getData'])
         ->getMock();
         $test->method('getData')->willReturn("1131440.44 4488358.31\n");
         $response = $test->getItem('system.average_idletime.duration');
