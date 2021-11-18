@@ -106,11 +106,11 @@ class MarketeersTest extends InfoMarketTestCase
     public function testGetRestrictionsPass()
     {
         $test = $this->getMockBuilder(FakeMarketeer::class)
-        ->setMethods(['getTestItem'])
+        ->setMethods(['getRestrictedItem'])
         ->getMock();
-        $test->expects($this->once())->method('getTestItem')->willReturn(['test']);
+        $test->expects($this->once())->method('getRestrictedItem_restrictions')->willReturn(['test']);
         
-        $this->assertEquals([],$test->getRestrictions('test.item'));
+        $this->assertEquals([],$test->getRestrictions('restricted.item'));
     }
     
     public function testGetRestrictionsFail()
@@ -119,7 +119,7 @@ class MarketeersTest extends InfoMarketTestCase
         
         $test = new FakeMarketeer();
         
-        $test->getRestrictions('test.item');
+        $test->getRestrictions('nonexisting.item');
     }
     
     public function testSimpleItem()
