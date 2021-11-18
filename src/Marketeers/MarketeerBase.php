@@ -25,7 +25,11 @@ abstract class MarketeerBase
     /**
      * Returns an array of items that this Marketeer offers. The result is a associative array:
      * - The key defines the offered path
-     * - The value defines the name of the callback
+     * - The value defines the base name of the callback. That means
+     *     if the marketeer defines a method get + the base name -> This is the getter for the item
+     *     if the marketeer defines a methode base name + _readable -> this is a method that returns if the item is readable
+     *     if the marketeer defines a methode base name + _writeable -> this is a method that returns if the item is writeable
+     *     if the marketeer defines a methode base name + _restrictions -> this is a method that returns possible restrictions 
      * @return unknown
      */
     public function getOffer(): array
@@ -42,7 +46,7 @@ abstract class MarketeerBase
     /**
      * Raises an exception if $test contains *, # or ?
      */
-    private function checkAllowedChars(string $test)
+    private function checkAllowedChars(string $name)
     {
         if (strpos($name,'*')) {
             throw new MarketeerException("An item query mustn't contain *: $name");
@@ -78,12 +82,18 @@ abstract class MarketeerBase
             }
             if (($i == count($search_parts)) || ($i == count($offer_parts))) {
                 // At this point either search or offer is shorter, so the offer doesn't match
+                if (!is_null($variables)) {
+                    $variables = [];
+                }
                 return false;
             }
             switch ($offer_parts[$i]) {
                 case '#':
                     if (!is_numeric($search_parts[$i])) {
                         // If it is not numeric it doesn't match 
+                        if (!is_null($variables)) {
+                            $variables = [];
+                        }
                         return false;
                     }
                     // otherwise treat it like a '?'
@@ -104,7 +114,10 @@ abstract class MarketeerBase
                     break;
                 default:
                     if ($search_parts[$i] != $offer_parts[$i]) {
-                       return false;
+                        if (!is_null($variables)) {
+                            $variables = [];
+                        }
+                        return false;
                     }
             }
             $i++;
@@ -133,13 +146,14 @@ abstract class MarketeerBase
      * @param $name string: The item to search for
      * @returns false|string see above
      */
-    protected function getItemMethod(string $name,&$variables=null)
+    protected function getItemMethod(string $name, string $prefix = '', 
+                                     string $postfix = '', &$variables=null)
     {
         $this->checkAllowedChars($name);
 
         foreach ($this->getOffer() as $offer=>$callback) {
             if ($this->offerMatches($name,$offer,$variables)) {
-                return $callback;
+                return $prefix.$callback.$postfix;
             }
         }
         return false;    
@@ -171,7 +185,7 @@ abstract class MarketeerBase
     protected function getItemRestrictions(string $name): array
     {
         $variables = [];
-        $method = $this->getItemMethod($name,$variables).'_restrictions';
+        $method = $this->getItemMethod($name,'','_restrictions',$variables);
         if (method_exists($this,$method)) {
             return $this->$method($variables);
         } else {
@@ -199,14 +213,15 @@ abstract class MarketeerBase
         }
     }
 
-    /**
-     * This method does the check, if the item is readable at all. It is sure that the
-     * item exists if this method is called.
-     * @param string $name
-     * @return bool
-     */
-    abstract protected function itemIsReadable(string $name): bool;
-
+    protected function itemIsReadable(string $name): bool
+    {
+        $method = $this->getItemMethod($name,'','_readable',$variables);
+        if (method_exists($this,$method)) {
+            return $this->$method($variables);
+        } else {
+            return true; // Default readable
+        }
+    }
     
     /**
      * Returns if the given item is writeable or raises an exception if it doesn't exist
@@ -214,55 +229,60 @@ abstract class MarketeerBase
      * @throws MarketeerException
      * @return bool
      */
-    public function isWritable(string $name, $credentials = null): bool
+    public function isWriteable(string $name, $credentials = null): bool
     {
         if ($this->offersItem($name)) {
-            return $this->itemIsWritable($name);
+            return $this->itemIsWriteable($name);
         } else {
             throw new MarketeerException("The item '$name' doesn't exists.");
         }        
     }
 
-    /**
-     * This method does the check, if the item is writeable at all. It is sure that the
-     * item exists if this method is called.
-     * @param string $name
-     * @return bool
-     */
-    abstract protected function itemIsWriteable(string $name): bool;
-    
-    private function calculateGetterName(string $name): string
+    protected function itemIsWriteable(string $name): bool
     {
-        $parts = explode('.',$name);
-        $allparts = [];
-        for ($i=0;$i<count($parts);$i++) {
-            $subparts = explode('_',$parts[$i]);
-            $allparts = array_merge($allparts,$subparts);
-        }
-        for ($i=0;$i<count($allparts);$i++) {
-            $allparts[$i] = ucfirst(strtolower($allparts[$i]));            
-        }
-        return 'get'.implode('',$allparts);        
+        $method = $this->getItemMethod($name,'','_writeable',$variables);
+        if (method_exists($this,$method)) {
+            return $this->$method($variables);
+        } else {
+            return false; // Default not writeable
+        }        
     }
     
-    public function getItem(string $name): Response
+    protected function isAccessible($user,$restriction): bool
     {
-        foreach ($this->getOffer() as $offer=>$callback) {
-            if (($variables = $this->getVariableParameters($name,$offer)) !== false) {
-                return $this->$callback(...$variables);
+        switch ($restriction) {
+            case 'anybody':
+                return true;
+            case 'user':
+                return in_array($user,['user','advanced','admin']);
+            case 'advanced':
+                return in_array($user,['advanced','admin']);
+            case 'admin':
+                return $user == 'admin';
+            default:
+                throw new MarketeerException("Unkown user group '$restriction'");
+        }
+    }
+    
+    public function getItem(string $name,$user = 'anybody')
+    {
+        $variables = [];
+        $method = $this->getItemMethod($name,'get','',$variables);
+        
+        if ($method === false) {
+            return false;
+        } else {
+            $restrictions = $this->getRestrictions($name);
+            if (!$this->isAccessible($user,$restrictions['read'])) {
+                $response = new Response();
+                return $response->error("The item '$name' is not accessible",'ITEMNOTACCESSIBLE');
             }
-        }
-        throw new MarketeerException("The item '$name' doesn't exists.");
-    }
-
-    /**
-     * Gets the response for this item
-     * @param string $name
-     * @return Response
-     */
-    protected function getItemResponse(string $name): Response
-    {
-        throw new MarketeerException("The item '$name' has no response method.");
+            if (!$this->isReadable($name)) {
+                $response = new Response();
+                return $response->error("The item '$name' is not readable",'ITEMNOTREADABLE');                
+            }
+            return $this->$method(...$variables);
+        }                
     }
     
 }

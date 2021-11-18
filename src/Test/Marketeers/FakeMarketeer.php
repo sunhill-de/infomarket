@@ -10,30 +10,35 @@ class FakeMarketeer extends MarketeerBase
     protected function getOffering(): array
     {
         return [
-            'test.item'=>'getTestItem',
-            'restricted.item'=>'getRestrictedItem',
-            'readonly.test'=>'getReadonlyTest',
-            'writeonly.test'=>'getWriteonlyTest',
-            'test.array.?.item'=>'getTestArray',
-            'another.?.array.?'=>'getAnotherArray',
-            'catchall.*'=>'getCatchAll',
-            'numeric.#.test'=>'getNumericTest'
+            'test.item'=>'TestItem',
+            'restricted.item'=>'RestrictedItem',
+            'writeable.test'=>'WriteableTest',
+            'writeonly.test'=>'WriteonlyTest',
+            'test.array.?.item'=>'TestArray',
+            'another.?.array.?'=>'AnotherArray',
+            'catchall.*'=>'CatchAll',
+            'numeric.#.test'=>'NumericTest'
         ];
     }
 
-    protected function getRestrictedItem_restrictions()
+    protected function RestrictedItem_restrictions()
     {
-        return ['read'=>'Admin','write'=>'Admin'];
+        return ['read'=>'admin','write'=>'admin'];
     }
     
-    protected function getReadonlyTest_writeable()
+    protected function WriteableTest_writeable()
+    {
+        return true;
+    }
+    
+    protected function WriteonlyTest_readable()
     {
         return false;
     }
     
-    protected function getWriteonlyTest_readable()
+    protected function WriteonlyTest_writeable()
     {
-        return false;
+        return true;
     }
     
     protected function getTestItem(): Response
