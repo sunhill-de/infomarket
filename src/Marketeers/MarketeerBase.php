@@ -6,7 +6,7 @@
  * Reviewstatus: 2021-10-30
  * Localization: none
  * Documentation: complete
- * Tests:
+ * Tests: Unit/Marketeers/MarketeersTest.php
  * Coverage: unknown
  * Dependencies: none
  * PSR-State: complete
@@ -23,7 +23,9 @@ abstract class MarketeerBase
 {
     
     /**
-     * Returns an array of items that this Marketeer offers
+     * Returns an array of items that this Marketeer offers. The result is a associative array:
+     * - The key defines the offered path
+     * - The value defines the name of the callback
      * @return unknown
      */
     public function getOffer(): array
@@ -38,15 +40,86 @@ abstract class MarketeerBase
     abstract protected function getOffering(): array;
     
     /**
-     * Checks if the marketeer offers the given item
-     * @param string $name
-     * @return bool
+     * Raises an exception if $test contains *, # or ?
      */
-    public function offersItem(string $name): bool
+    private function checkAllowedChars(string $test)
     {
         if (strpos($name,'*')) {
             throw new MarketeerException("An item query mustn't contain *: $name");
         }
+        if (strpos($name,'#')) {
+            throw new MarketeerException("An item query mustn't contain #: $name");
+        }
+        if (strpos($name,'?')) {
+            throw new MarketeerException("An item query mustn't contain ?: $name");
+        }        
+    }
+    
+    /**
+     * Tests if the string $search matches to the string $offer.
+     * @param $search string: The string to search for. Mustn't contain *, # or ?
+     * @param $offer string: The string that offers a possible match
+     * @param &$variables null|array: If not null the matches of #,? and * fields are stored here
+     * @return bool: True, if the offer matches the search, otherwise false
+     */
+    private function offerMatches(string $search,string $offer,&$variables=null): bool
+    {
+        if (!is_null($variables) && !is_array($variables)) {
+            $variables = [];
+        }
+        $search_parts = explode('.',$search);
+        $offer_parts = explode('.',$offer);
+        
+        $i = 0;
+        while (true) {
+            if (($i == count($search_parts)) && ($i == count($offer_parts))) {
+                // At this point the search matches the offer
+                return true;
+            }
+            if (($i == count($search_parts)) || ($i == count($offer_parts))) {
+                // At this point either search or offer is shorter, so the offer doesn't match
+                return false;
+            }
+            switch ($offer_parts[$i]) {
+                case '#':
+                    if (!is_numeric($search_parts[$i])) {
+                        // If it is not numeric it doesn't match 
+                        return false;
+                    }
+                    // otherwise treat it like a '?'
+                case '?':
+                    if (!is_null($variables)) {
+                        $variables[] = $search_parts[$i];
+                    }
+                    break;
+                case '*':
+                    if (!is_null($variables)) {
+                        $temp = [];
+                        for ($j = $i; $j < count($search_parts); $j++) {
+                            $temp[] = $search_parts[$j];
+                        }
+                        $variables[] = implode('.',$temp);
+                    }    
+                    return true;
+                    break;
+                default:
+                    if ($search_parts[$i] != $offer_parts[$i]) {
+                       return false;
+                    }
+            }
+            $i++;
+        }    
+    }
+
+    /**
+     * Checks if the marketeer offers the given item
+     * @param string $name The item to search for
+     * @return bool, True if the marketeer offers this item otherwise false
+     */
+    public function offersItem(string $name): bool
+    {
+        $this->checkAllowedChars($name);
+
         foreach ($this->getOffer() as $offer=>$callback) {
             if ($this->offerMatches($name,$offer)) {
                 return true;
@@ -54,57 +127,22 @@ abstract class MarketeerBase
         }
         return false;
     }
-
-    private function offerMatches(string $search,string $offer): bool
+    
+    /**
+     * If the given item is offered then it returns the name of the item-method otherwise false
+     * @param $name string: The item to search for
+     * @returns false|string see above
+     */
+    protected function getItemMethod(string $name)
     {
-        $result = $this->getVariableParameters($search, $offer);
-        
-        if (is_bool($result)) {
-            return $result;
-        } else {
-            return true;
-        }
-    }
+        $this->checkAllowedChars($name);
 
-    private function getVariableParameters(string $search,string $offer)
-    {
-        $result = [];
-        if (strpos($offer,'*')) {
-            $search_parts = explode('.',$search);
-            $offer_parts = explode('.',$offer);
-            if (count($search_parts) !== count($offer_parts)) {
-                return false;
-            }
-            $i = 0;
-            while ($i < count($search_parts)) {
-                if ($i>=count($offer_parts)) {
-                    return false;
-                }
-                switch ($offer_parts[$i]) {
-                    case '*':
-                        $result[] = $search_parts[$i];
-                        break;
-                    case '*#':
-                        if (!is_numeric($search_parts[$i])) {
-                            return false;
-                        }
-                        $result[] = $search_parts[$i];
-                        break;
-                    default:
-                        if ($search_parts[$i] != $offer_parts[$i]) {
-                            return false;
-                        }
-                }
-                $i++;
-            }
-            return $result;
-        } else {
-            if ($offer == $search) {
-                return [];
-            } else {
-                return false;
+        foreach ($this->getOffer() as $offer=>$callback) {
+            if ($this->offerMatches($name,$offer)) {
+                return $callback;
             }
         }
+        return false;    
     }
     
     /**
@@ -125,11 +163,17 @@ abstract class MarketeerBase
     }
     
     /**
-     * Marketeers can overwrite this method to provide restrictions for the access
+     * This method look for a method that is names 'item-method'_restrictions. if found returns its value
+     * otherwise return the default restrictions
      * @param string $name
-     * @return NULL
+     * @return array
      */
     protected function getItemRestrictions(string $name): array
+    {
+        $method = $this->
+    }
+    
+    protected function getDefaultRestrictions(): array
     {
         return ['read'=>'anybody','write'=>'anybody'];     
     }
