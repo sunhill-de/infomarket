@@ -61,31 +61,5 @@ class Remote extends MarketeerBase
     {
         
     }
-    
-    /**
-     * Returns what items this marketeer offers
-     * @return array
-     */
-    protected function getOffering(): array
-    {
-        return [
-            'system.cpu.count'=>'getCount',
-            'system.cpu.*.vendor'=>'getVendor',
-            'system.cpu.*.model'=>'getModel',
-            'system.cpu.*.bogomips'=>'getBogomips',
-            'system.cpu.temp'=>'getTemp',            
-        ];
-    }
-       
-    protected function itemIsReadable(string $item): bool
-    {
-        return true;
-    }
-    
-    protected function itemIsWriteable(string $item): bool
-    {
-        return false;
-    }
-
-    
+        
 }
