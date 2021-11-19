@@ -20,6 +20,14 @@ use Sunhill\InfoMarket\Marketeers\Response\Response;
 
 define('CURRENT_VERSION','0.1');
 
+/**
+ * The core class of this project. It's exports the following methods:
+ * - installMarketeer - To install a new marketeer. This mustn't be exported via a REST-API (local only)
+ * - readItem - To read an item
+ * - readItemList - To read a list of items
+ * - writeItem - To write to an item
+ * - getOfferings - To collect all offerings from all marketeers
+ */
 class InfoMarket
 {
   
@@ -114,4 +122,18 @@ class InfoMarket
     return false;
   }
   
+  /**
+   * Writes the value $value to the item identified by $path and returns, if the action was successful
+   * @param $path
+   * @param $value
+   * @param $credentials
+   * @returns string 
+   */
+  public function writeItem(string $path, $value, $credentials = null): string
+  {
+  }
+  
+  public function getOfferings(): string
+  {
+  }  
 }
